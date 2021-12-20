@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="YieldGameEngine">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../YieldGameEngine/out/artifacts/YieldGameEngine_jar/YieldGameEngine.jar!/" />
+      <root url="file://$PROJECT_DIR$/../YieldGameEngine/out/production/YieldGameEngine" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
