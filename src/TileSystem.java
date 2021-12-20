@@ -9,6 +9,12 @@ public class TileSystem extends YldObject {
 
     public static Tile[] tiles;
 
+    @Override
+    public void create() {
+        super.create();
+        add(new TileDraw());
+    }
+
     public void tilesFromImagePath(String path) {
         BufferedImage map = null;
         try {
@@ -22,18 +28,24 @@ public class TileSystem extends YldObject {
         int WIDTH = map.getWidth();
         int HEIGHT = map.getHeight();
 
-        tiles = new Tile[map.getWidth() * map.getHeight()];
+        tiles = new Tile[WIDTH * HEIGHT];
 
-        map.getRGB(0, 0, map.getWidth(), map.getHeight(), pixels, 0, map.getWidth());
+        pixels = map.getRGB(0, 0, WIDTH, HEIGHT, pixels, 0, WIDTH);
 
-        for (int xx = 0; xx < map.getWidth(); xx++) {
-            for (int yy = 0; yy < map.getHeight(); yy++) {
-                int actPixel = pixels[xx + (yy * map.getWidth())];
+        for (int xx = 0; xx < WIDTH; xx++) {
+            for (int yy = 0; yy < HEIGHT; yy++) {
+                int actPixel = pixels[xx + (yy * WIDTH)];
+                int actTile = xx + (yy * WIDTH);
                 switch (actPixel) {
-                    case 0xFF000000:
+                    case 0xFFFFFFFF:
+                        tiles[actTile] = new Tile(TileType.WALL, xx, yy);
+                        break;
+                    case 0xFF00FFFF:
 
                         break;
                 }
+                if (tiles[actTile] == null)
+                    tiles[actTile] = new Tile(TileType.GROUND, xx, yy);
 
             }
         }

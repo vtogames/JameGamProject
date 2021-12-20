@@ -13,7 +13,6 @@ public class InterfaceRenderer extends YldComponent implements YldGraphical {
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(Color.red);
-        g.fillRect(0, 0, 100, 100);
+
     }
 }
