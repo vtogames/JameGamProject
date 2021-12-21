@@ -43,6 +43,7 @@ public class TileSystem extends YldObject {
                         Player.spawnX = xx * Tile.getWidth();
                         Player.spawnY = yy * Tile.getHeight();
                         Player.goToSpawn = true;
+                        Player.life = 100;
                         break;
                     case 0xFFFFFFFF:
                         tiles[actTile] = new Tile(TileType.WALL, xx, yy);

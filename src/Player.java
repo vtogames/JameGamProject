@@ -20,6 +20,7 @@ public class Player extends YldObject implements YldGraphical {
     public static Vector movementVector = new Vector(0, 0);
     public static BufferedImage PLAYER_SPRITESHEET;
     public boolean moving, created;
+    public static int life;
     public Image idle[], runD[], runU[], runL[], runR[], drawImage;
     public static char dir = 'd';
 
@@ -177,5 +178,15 @@ public class Player extends YldObject implements YldGraphical {
             drawImage = idle[0];
 
         g.drawImage(drawImage, (int) (axis.position.getX() + Camera.x), (int) (axis.position.getY() + Camera.y), Tile.getWidth(), Tile.getHeight(), null);
+
+            String lifeString = "life: " + Player.life;
+            g.setFont(new Font("arial", 1, 10));
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setColor(new Color(0, 0, 0, 150));
+            g.fillRect(YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString) - 2, 0, g.getFontMetrics().stringWidth(lifeString) + 2, g.getFont().getSize() * 2);
+            g.setColor(Color.white);
+
+
+            g.drawString(lifeString, YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString), g.getFont().getSize());
     }
 }

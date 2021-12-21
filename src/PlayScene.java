@@ -9,7 +9,6 @@ public class PlayScene extends YldScene {
     public void create() {
         super.create();
 
-        add(new GameInterface());
         add(tileSystem = new TileSystem());
         add(player = new Player());
         tileSystem.tilesFromImagePath("/testmap.png");

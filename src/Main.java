@@ -16,8 +16,8 @@ public class Main extends YldFrame {
     Main() {
         super();
         try {
-            Tile.TILE_SPRITESHEET = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/TILE_SPRITESHEET.png")));
-            Player.PLAYER_SPRITESHEET = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/PLAYER_SPRITESHEET.png")));
+            Tile.TILE_SPRITESHEET = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/tile_spritesheet.png")));
+            Player.PLAYER_SPRITESHEET = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/player_spritesheet.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
