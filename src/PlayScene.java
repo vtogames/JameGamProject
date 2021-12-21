@@ -1,16 +1,31 @@
+import yield.Yld;
 import yield.objects.YldScene;
 
 public class PlayScene extends YldScene {
 
-    public static TileSystem tileSystem;
     public static Player player;
+    public static DialogueBox dialogueBox;
 
     @Override
     public void create() {
         super.create();
-
-        add(tileSystem = new TileSystem());
+        Yld.setRenderFps(30);
         add(player = new Player());
-        tileSystem.tilesFromImagePath("/testmap.png");
+       add(new TileSystem());
+        add(new SnowFilter());
+        add(dialogueBox = new DialogueBox());
+        add(new NPCController());
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        //System.out.println(YldTime.getRenderFPS());
+    }
+
+    @Override
+    public void enter() {
+        super.enter();
+        TileSystem.tilesFromImagePath("testmap3");
     }
 }

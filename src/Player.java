@@ -1,7 +1,4 @@
-import yield.Yld;
 import yield.YldGame;
-import yield.YldTime;
-import yield.components.YldImage;
 import yield.display.Vector;
 import yield.display.YldGraphical;
 import yield.objects.YldObject;
@@ -10,126 +7,184 @@ import yield.util.YldInput;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.HashSet;
 
-public class Player extends YldObject implements YldGraphical {
+public class Player extends YldObject {
 
-    public static boolean canWalk = true, goToSpawn;
+    public static boolean canWalk = true, goToSpawn, burning, hitting, startHitting, renderPlayer = true, lastSideR, lastSideU, showFire;
     // public static int horizontal, vertical;
-    public static float speed = 1f, spawnX, spawnY;
-    public int animFrame, animFrameMax = 4, animFrameC, animFrameCMax = 5;
+    public static float speed = 1f, walkSpeed = 1f, runSpeed = 1.3f, spawnX, spawnY;
+    public int animFrame, animFrameMax = 4, animFrameC, animFrameCMax = 5, ctgoC, fireAct, fireActC;
     public static Vector movementVector = new Vector(0, 0);
     public static BufferedImage PLAYER_SPRITESHEET;
-    public boolean moving, created;
-    public static int life;
-    public Image idle[], runD[], runU[], runL[], runR[], drawImage;
+    public boolean moving, created, running;
+    public static int life, lifeColorC, lifeFrameC, lifeFrameCMax = 60, enterColorC, counterToGameOver;
+    public Image idleR[], idleL[], idleU[], runD[], runU[], runL[], runR[], drawImage, lifeGoodImage, lifeMediumImage, lifeBadImage, deadImage, fireImage[];
     public static char dir = 'd';
+    public static HashSet<RIP> rips = new HashSet<>();
 
     @Override
     public void create() {
         super.create();
-        idle = new Image[4];
-        idle[0] = PLAYER_SPRITESHEET.getSubimage(0, 0, 16, 16);
-        idle[1] = PLAYER_SPRITESHEET.getSubimage(16, 0, 16, 16);
-        idle[2] = PLAYER_SPRITESHEET.getSubimage(16 * 2, 0, 16, 16);
-        idle[3] = PLAYER_SPRITESHEET.getSubimage(16 * 3, 0, 16, 16);
-        runR = new Image[6];
+        lifeGoodImage = Tile.TILE_SPRITESHEET.getSubimage(64, 0, 16, 16);
+        lifeMediumImage = Tile.TILE_SPRITESHEET.getSubimage(64 + 16, 0, 16, 16);
+        lifeBadImage = Tile.TILE_SPRITESHEET.getSubimage(64 + 16 * 2, 0, 16, 16);
+        deadImage = Tile.TILE_SPRITESHEET.getSubimage(64 + 16 * 3, 0, 16, 16);
+        RIP.ripImage = deadImage;
+        idleR = new Image[4];
+        idleR[0] = PLAYER_SPRITESHEET.getSubimage(0, 0, 16, 16);
+        idleR[1] = PLAYER_SPRITESHEET.getSubimage(16, 0, 16, 16);
+        idleR[2] = PLAYER_SPRITESHEET.getSubimage(16 * 2, 0, 16, 16);
+        idleR[3] = PLAYER_SPRITESHEET.getSubimage(16 * 3, 0, 16, 16);
+        idleL = new Image[4];
+        idleL[0] = PLAYER_SPRITESHEET.getSubimage(0, 16, 16, 16);
+        idleL[1] = PLAYER_SPRITESHEET.getSubimage(16, 16, 16, 16);
+        idleL[2] = PLAYER_SPRITESHEET.getSubimage(16 * 2, 16, 16, 16);
+        idleL[3] = PLAYER_SPRITESHEET.getSubimage(16 * 3, 16, 16, 16);
+        idleU = new Image[4];
+        idleU[0] = PLAYER_SPRITESHEET.getSubimage(0, 32, 16, 16);
+        idleU[1] = PLAYER_SPRITESHEET.getSubimage(16, 32, 16, 16);
+        idleU[2] = PLAYER_SPRITESHEET.getSubimage(16 * 2, 32, 16, 16);
+        idleU[3] = PLAYER_SPRITESHEET.getSubimage(16 * 3, 32, 16, 16);
+        runR = new Image[4];
         runR[0] = PLAYER_SPRITESHEET.getSubimage(64, 0, 16, 16);
         runR[1] = PLAYER_SPRITESHEET.getSubimage(80, 0, 16, 16);
         runR[2] = PLAYER_SPRITESHEET.getSubimage(96, 0, 16, 16);
         runR[3] = PLAYER_SPRITESHEET.getSubimage(112, 0, 16, 16);
-        runR[4] = PLAYER_SPRITESHEET.getSubimage(128, 0, 16, 16);
-        runR[5] = PLAYER_SPRITESHEET.getSubimage(144, 0, 16, 16);
-        runU = new Image[6];
+        runU = new Image[4];
         runU[0] = PLAYER_SPRITESHEET.getSubimage(64, 16, 16, 16);
         runU[1] = PLAYER_SPRITESHEET.getSubimage(80, 16, 16, 16);
         runU[2] = PLAYER_SPRITESHEET.getSubimage(96, 16, 16, 16);
         runU[3] = PLAYER_SPRITESHEET.getSubimage(112, 16, 16, 16);
-        runU[4] = PLAYER_SPRITESHEET.getSubimage(128, 16, 16, 16);
-        runU[5] = PLAYER_SPRITESHEET.getSubimage(144, 16, 16, 16);
-        runL = new Image[6];
+        runL = new Image[4];
         runL[0] = PLAYER_SPRITESHEET.getSubimage(64, 32, 16, 16);
         runL[1] = PLAYER_SPRITESHEET.getSubimage(80, 32, 16, 16);
         runL[2] = PLAYER_SPRITESHEET.getSubimage(96, 32, 16, 16);
         runL[3] = PLAYER_SPRITESHEET.getSubimage(112, 32, 16, 16);
-        runL[4] = PLAYER_SPRITESHEET.getSubimage(128, 32, 16, 16);
-        runL[5] = PLAYER_SPRITESHEET.getSubimage(144, 32, 16, 16);
-        runD = new Image[6];
+        runD = new Image[4];
         runD[0] = PLAYER_SPRITESHEET.getSubimage(64, 48, 16, 16);
         runD[1] = PLAYER_SPRITESHEET.getSubimage(80, 48, 16, 16);
         runD[2] = PLAYER_SPRITESHEET.getSubimage(96, 48, 16, 16);
         runD[3] = PLAYER_SPRITESHEET.getSubimage(112, 48, 16, 16);
-        runD[4] = PLAYER_SPRITESHEET.getSubimage(128, 48, 16, 16);
-        runD[5] = PLAYER_SPRITESHEET.getSubimage(144, 48, 16, 16);
-        setLayer(10);
+        fireImage = new Image[2];
+        fireImage[0] = Tile.FIRE_IMAGE1;
+        fireImage[1] = Tile.FIRE_IMAGE2;
+        enterColorC = 255;
+        renderPlayer = true;
+        canWalk = true;
+        hitting = false;
+        lifeFrameC = 0;
+        lifeColorC = 0;
+        life = 100;
         created = true;
+    }
+
+    @Override
+    public void enter() {
+        super.enter();
+        showFire = false;
+        enterColorC = 255;
+        renderPlayer = true;
+        canWalk = true;
+        hitting = false;
+        lifeFrameC = 0;
+        lifeColorC = 0;
     }
 
     @Override
     public void update() {
         super.update();
+        setLayer(30);
+        if (getFrames() < 4) {
+            life = 100;
+        }
         if (goToSpawn) {
             goToSpawn = false;
             axis.position.teleport(new Vector(spawnX, spawnY));
         }
         if (canWalk) {
-            if (YldInput.isKeyPressed(KeyEvent.VK_UP) || YldInput.isKeyPressed(KeyEvent.VK_W)) {
-                movementVector.setY(-1 * speed);
-                dir = 'u';
-            }
-            if (YldInput.isKeyPressed(KeyEvent.VK_DOWN) || YldInput.isKeyPressed(KeyEvent.VK_S)) {
-                movementVector.setY(1 * speed);
-                dir = 'd';
+            try {
+                if (YldInput.isKeyPressed(KeyEvent.VK_UP) || YldInput.isKeyPressed(KeyEvent.VK_W)) {
+                    movementVector.setY(-1 * speed);
+                    dir = 'u';
+                }
+                if (YldInput.isKeyPressed(KeyEvent.VK_DOWN) || YldInput.isKeyPressed(KeyEvent.VK_S)) {
+                    movementVector.setY(1 * speed);
+                    dir = 'd';
+                }
+
+                if (YldInput.isKeyPressed(KeyEvent.VK_LEFT) || YldInput.isKeyPressed(KeyEvent.VK_A)) {
+                    movementVector.setX(-1 * speed);
+                    dir = 'l';
+                }
+                if (YldInput.isKeyPressed(KeyEvent.VK_RIGHT) || YldInput.isKeyPressed(KeyEvent.VK_D)) {
+                    movementVector.setX(1 * speed);
+                    dir = 'r';
+                }
+
+                if (YldInput.isKeyPressed(KeyEvent.VK_SHIFT)) {
+                    running = true;
+                    speed = runSpeed;
+                } else {
+                    running = false;
+                    speed = walkSpeed;
+                }
+            } catch (Exception ignore) {
+
             }
 
-            if (YldInput.isKeyPressed(KeyEvent.VK_LEFT) || YldInput.isKeyPressed(KeyEvent.VK_A)) {
-                movementVector.setX(-1 * speed);
-                dir = 'l';
-            }
-            if (YldInput.isKeyPressed(KeyEvent.VK_RIGHT) || YldInput.isKeyPressed(KeyEvent.VK_D)) {
-                movementVector.setX(1 * speed);
-                dir = 'r';
-            }
         }
         moving = movementVector.getX() != 0 || movementVector.getY() != 0;
         Vector toTranslate = new Vector(0, 0);
-        for (Tile tile : TileSystem.tiles) {
-            if (tile.getTileType() == TileType.WALL) {
+        if (TileSystem.tiles != null)
+            for (Tile tile : TileSystem.tiles) {
+                if (tile != null) {
+                    if (tile.getTileType() == TileType.SUN) {
+                        if (axis.position.getX() >= tile.getX() && axis.position.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() + axis.scale.getX() >= tile.getX() && axis.position.getX() + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() >= tile.getX() && axis.position.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() + axis.scale.getX() >= tile.getX() && axis.position.getX() + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight()) {
+                            burning = true;
+                        }
+                    }
 
-                //up left
-                if (axis.position.getX() >= tile.getX() && axis.position.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight()) {
-                    toTranslate.setX(toTranslate.getX() + speed);
-                    toTranslate.setY(toTranslate.getY() + speed);
+                    if (tile.getTileType() == TileType.LAVA) {
+                        if (axis.position.getX() >= tile.getX() && axis.position.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() + axis.scale.getX() >= tile.getX() && axis.position.getX() + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() >= tile.getX() && axis.position.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() + axis.scale.getX() >= tile.getX() && axis.position.getX() + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight()) {
+                            life = 0;
+                        }
+                    }
+                    if (tile.getTileType() == TileType.WALL) {
+
+                        //up left
+                        if (axis.position.getX() - 1 >= tile.getX() && axis.position.getX() - 1 <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight()) {
+                            toTranslate.setX(toTranslate.getX() + speed);
+                            toTranslate.setY(toTranslate.getY() + speed);
+                        }
+
+                        //up right
+                        if (axis.position.getX() - 1 + axis.scale.getX() >= tile.getX() && axis.position.getX() - 1 + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight()) {
+                            toTranslate.setX(toTranslate.getX() + -speed);
+                            toTranslate.setY(toTranslate.getY() + speed);
+                        }
+
+                        //down left
+                        if (axis.position.getX() - 1 >= tile.getX() && axis.position.getX() - 1 <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight()) {
+                            toTranslate.setX(toTranslate.getX() + speed);
+                            toTranslate.setY(toTranslate.getY() + -speed);
+                        }
+
+                        //down right
+                        if (axis.position.getX() - 1 + axis.scale.getX() >= tile.getX() && axis.position.getX() - 1 + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight()) {
+                            toTranslate.setX(toTranslate.getX() + -speed);
+                            toTranslate.setY(toTranslate.getY() + -speed);
+                        }
+
+
+                    }
                 }
-
-                //up right
-                if (axis.position.getX() + axis.scale.getX() >= tile.getX() && axis.position.getX() + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight()) {
-                    toTranslate.setX(toTranslate.getX() + -speed);
-                    toTranslate.setY(toTranslate.getY() + speed);
-                }
-
-                //down left
-                if (axis.position.getX() >= tile.getX() && axis.position.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight()) {
-                    toTranslate.setX(toTranslate.getX() + speed);
-                    toTranslate.setY(toTranslate.getY() + -speed);
-                }
-
-                //down right
-                if (axis.position.getX() + axis.scale.getX() >= tile.getX() && axis.position.getX() + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight()) {
-                    toTranslate.setX(toTranslate.getX() + -speed);
-                    toTranslate.setY(toTranslate.getY() + -speed);
-                }
-
 
             }
-        }
-        if (toTranslate.getX() > speed)
-            toTranslate.setX(speed);
-        if (toTranslate.getX() < -speed)
-            toTranslate.setX(-speed);
-        if (toTranslate.getY() > speed)
-            toTranslate.setY(speed);
-        if (toTranslate.getY() < -speed)
-            toTranslate.setY(-speed);
+        if (toTranslate.getX() > speed) toTranslate.setX(speed);
+        if (toTranslate.getX() < -speed) toTranslate.setX(-speed);
+        if (toTranslate.getY() > speed) toTranslate.setY(speed);
+        if (toTranslate.getY() < -speed) toTranslate.setY(-speed);
 
         axis.position.translate(toTranslate);
 
@@ -138,8 +193,51 @@ public class Player extends YldObject implements YldGraphical {
         movementVector.setX(0);
         movementVector.setY(0);
 
+        int mult = 1;
+
+        if (moving) {
+            mult = 1;
+            if (enterColorC > 0)
+                enterColorC -= 3;
+            if (dir == 'r') {
+                lastSideR = true;
+                lastSideU = false;
+                drawImage = runR[animFrame];
+            } else if (dir == 'u') {
+                lastSideU = true;
+                drawImage = runU[animFrame];
+            } else if (dir == 'l') {
+                lastSideR = false;
+                lastSideU = false;
+                drawImage = runL[animFrame];
+            } else if (dir == 'd') {
+                lastSideR = false;
+                lastSideU = false;
+                drawImage = runD[animFrame];
+            }
+
+        } else {
+            mult = 4;
+            if (lastSideU)
+                drawImage = idleU[animFrame];
+            else if (lastSideR)
+                drawImage = idleR[animFrame];
+            else
+                drawImage = idleL[animFrame];
+        }
+
+        if(showFire) {
+            fireActC++;
+            if(fireActC > animFrameCMax) {
+                fireActC = 0;
+                fireAct++;
+            }
+            if(fireAct > 1)
+                fireAct = 0;
+        }
+
         animFrameC++;
-        if (animFrameC >= animFrameCMax) {
+        if (animFrameC >= animFrameCMax * mult) {
             animFrame++;
             animFrameC = 0;
         }
@@ -147,46 +245,117 @@ public class Player extends YldObject implements YldGraphical {
             animFrame = 0;
         }
 
-        if (moving) {
-            if (dir == 'r') {
-                drawImage = runR[animFrame];
-            } else if (dir == 'u') {
-                drawImage = runU[animFrame];
-            } else if (dir == 'l') {
-                drawImage = runL[animFrame];
-            } else if (dir == 'd') {
-                drawImage = runD[animFrame];
-            }
+        if (burning) {
+            showFire = true;
+            burning = false;
+            if (lifeFrameC == 0)
+                hitting = true;
+        }
 
+        if (hitting) {
+            if (startHitting) lifeFrameC = lifeFrameCMax;
+            startHitting = false;
+            lifeFrameC++;
+            if (lifeFrameC > lifeFrameCMax) {
+                lifeFrameC = 0;
+                showFire = false;
+                hit();
+                hitting = false;
+            }
         } else {
-            drawImage = idle[animFrame];
+            startHitting = true;
         }
 
 
-        if (drawImage == null)
-            drawImage = idle[0];
+        if (drawImage == null) drawImage = idleR[0];
         axis.scale.setImageScale(drawImage);
         Camera.x = axis.position.getX() * -1 + YldGame.getImage().getWidth() / 2f - drawImage.getWidth(null) / 2f;
         Camera.y = axis.position.getY() * -1 + YldGame.getImage().getHeight() / 2f - drawImage.getHeight(null) / 2f;
+
+        if (life <= 0 && created) {
+            life = 0;
+
+            renderPlayer = false;
+            canWalk = false;
+            if (counterToGameOver == 0)
+                rips.add(new RIP((int) axis.position.getX(), (int) axis.position.getY()));
+
+            counterToGameOver++;
+            if (counterToGameOver == 500) YldGame.switchScene("PlayScene");
+            try {
+                if (YldInput.getKeysSet().size() != 0 && counterToGameOver > 60) YldGame.switchScene("PlayScene");
+            } catch (Exception ignore) {
+            }
+
+        } else {
+            counterToGameOver = 0;
+        }
+
+        if (lifeColorC > 0) lifeColorC -= 2;
+
+
+        if (enterColorC > 0) enterColorC -= 1;
+
+    }
+
+    public static void hit() {
+        if (counterToGameOver == 0) {
+            life -= 8;
+            lifeColorC = 120;
+        }
+
     }
 
     @Override
     public void draw(Graphics g) {
-        if (!created)
-            return;
-        if (drawImage == null)
-            drawImage = idle[0];
+        if (!created) return;
+        if (drawImage == null) drawImage = idleR[0];
 
-        g.drawImage(drawImage, (int) (axis.position.getX() + Camera.x), (int) (axis.position.getY() + Camera.y), Tile.getWidth(), Tile.getHeight(), null);
-
-            String lifeString = "life: " + Player.life;
-            g.setFont(new Font("arial", 1, 10));
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setColor(new Color(0, 0, 0, 150));
-            g.fillRect(YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString) - 2, 0, g.getFontMetrics().stringWidth(lifeString) + 2, g.getFont().getSize() * 2);
-            g.setColor(Color.white);
+        rips.forEach(r -> g.drawImage(RIP.ripImage, r.x + TileDraw.cx, r.y + TileDraw.cy, null));
 
 
-            g.drawString(lifeString, YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString), g.getFont().getSize());
+        Image lifeImage = lifeGoodImage;
+
+        if (life < 60 && life > 30)
+            lifeImage = lifeMediumImage;
+        if (life <= 30)
+            lifeImage = lifeBadImage;
+        if (life == 0)
+            lifeImage = deadImage;
+
+        if (renderPlayer) {
+            g.drawImage(drawImage, (int) (axis.position.getX() + Camera.x), (int) (axis.position.getY() + Camera.y), Tile.getWidth(), Tile.getHeight(), null);
+            if(showFire) {
+                g.drawImage(fireImage[fireAct],  (int) (axis.position.getX() + Camera.x), (int) (axis.position.getY() + Camera.y), Tile.getWidth(), Tile.getHeight(), null);
+            }
+
+        }
+
+
+        String lifeString = "life: " + Player.life;
+        g.setFont(new Font("arial", 1, 10));
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(new Color(0, 0, 0, 150));
+        g.fillRoundRect(YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString) - 2, 0, g.getFontMetrics().stringWidth(lifeString) + 2, g.getFont().getSize() + 5 + lifeImage.getHeight(null), 8, 8);
+        g.setColor(Color.white);
+
+        g.drawString(lifeString, YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString), g.getFont().getSize());
+        g.drawImage(lifeImage, YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString) / 2 - lifeImage.getWidth(null) / 2, g.getFont().getSize() + 2, null);
+
+        if (lifeColorC > 255) lifeColorC = 255;
+        if (lifeColorC < 0) lifeColorC = 0;
+        if (enterColorC < 0) enterColorC = 0;
+        if (enterColorC > 255) enterColorC = 255;
+        ctgoC = counterToGameOver - 150;
+        if (ctgoC > 255) ctgoC = 255;
+        if (ctgoC < 0) ctgoC = 0;
+
+        g2.setColor(new Color(255, 0, 0, lifeColorC));
+        g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
+        g2.setColor(new Color(0, 0, 0, ctgoC));
+        g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
+        g2.setColor(new Color(255, 255, 255, enterColorC));
+        g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
+
     }
 }

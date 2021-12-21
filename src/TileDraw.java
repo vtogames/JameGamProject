@@ -1,4 +1,5 @@
 import yield.YldGame;
+import yield.YldTime;
 import yield.components.YldComponent;
 import yield.display.YldGraphical;
 
@@ -6,30 +7,32 @@ import java.awt.*;
 
 public class TileDraw extends YldComponent implements YldGraphical {
 
+    public static int cx, cy;
+
     @Override
     public void draw(Graphics g) {
+        setLayer(5);
+        cx = (int) Camera.x;
+        cy = (int) Camera.y;
         if (TileSystem.tiles != null) {
-            for (int x = 0; x < YldGame.getImage().getWidth() / Tile.getWidth() + 1; x++) {
-                for (int y = 0; y < YldGame.getImage().getHeight() / Tile.getHeight(); y++) {
-                    g.drawImage(Tile.LAVA_IMAGE, x * Tile.getWidth(), y * Tile.getHeight(), null);
-                }
-            }
+            g.setColor(Color.white);
+            g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
             for (Tile tile : TileSystem.tiles) {
 
                 if (tile != null) {
                     boolean canRender = true;
 
-                    if (tile.getX() < -Camera.x - Tile.getWidth())
+                    if (tile.getX() < - Camera.x - Tile.getWidth())
                         canRender = false;
-                    if (tile.getY() < -Camera.y - Tile.getHeight())
+                    if (tile.getY() < - Camera.y - Tile.getHeight())
                         canRender = false;
-                    if (tile.getX() > -Camera.x + YldGame.getImage().getWidth())
+                    if (tile.getX() > - Camera.x + YldGame.getImage().getWidth())
                         canRender = false;
-                    if (tile.getY() > -Camera.y + YldGame.getImage().getHeight())
+                    if (tile.getY() > - Camera.y + YldGame.getImage().getHeight())
                         canRender = false;
 
                     if (canRender)
-                        g.drawImage(tile.getTileImage(), tile.getX() + (int) Camera.x, tile.getY() + (int) Camera.y, Tile.getWidth(), Tile.getHeight(), null);
+                        g.drawImage(tile.getTileImage(), tile.getX() + cx, tile.getY() + cy, Tile.getWidth(), Tile.getHeight(), null);
                 }
 
 

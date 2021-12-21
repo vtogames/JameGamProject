@@ -8,7 +8,7 @@ public class Tile {
     private TileType tileType;
     private Image tileImage;
 
-    public static Image WALL_IMAGE, GROUND_IMAGE, LAVA_IMAGE, SUN_IMAGE;
+    public static Image WALL_IMAGE, GROUND_IMAGE, LAVA_IMAGE, SUN_IMAGE1, SUN_IMAGE2, SUN_IMAGE3, FIRE_IMAGE1, FIRE_IMAGE2;
     public static BufferedImage TILE_SPRITESHEET;
 
     public Tile(TileType tileType, int x, int y) {
@@ -23,7 +23,14 @@ public class Tile {
                 tileImage = GROUND_IMAGE;
                 break;
             case SUN:
-                tileImage = SUN_IMAGE;
+                int r = SnowFilter.random.nextInt(3);
+                if(r == 0) {
+                    tileImage = SUN_IMAGE1;
+                } else if(r == 1) {
+                    tileImage = SUN_IMAGE2;
+                } else {
+                    tileImage = SUN_IMAGE3;
+                }
                 break;
             case LAVA:
                 tileImage = LAVA_IMAGE;
