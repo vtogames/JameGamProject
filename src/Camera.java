@@ -1,5 +1,5 @@
 public class Camera {
 
-    public static int x, y;
+    public static float x, y;
 
 }

@@ -1,3 +1,5 @@
+import yield.YldGame;
+import yield.display.Vector;
 import yield.objects.YldObject;
 
 import javax.imageio.ImageIO;
@@ -37,12 +39,15 @@ public class TileSystem extends YldObject {
                 int actPixel = pixels[xx + (yy * WIDTH)];
                 int actTile = xx + (yy * WIDTH);
                 switch (actPixel) {
+                    case 0xFF00FFFF:
+                        Player.spawnX = xx * Tile.getWidth();
+                        Player.spawnY = yy * Tile.getHeight();
+                        Player.goToSpawn = true;
+                        break;
                     case 0xFFFFFFFF:
                         tiles[actTile] = new Tile(TileType.WALL, xx, yy);
                         break;
-                    case 0xFF00FFFF:
 
-                        break;
                 }
                 if (tiles[actTile] == null)
                     tiles[actTile] = new Tile(TileType.GROUND, xx, yy);

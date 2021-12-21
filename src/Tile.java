@@ -25,6 +25,19 @@ public class Tile {
         }
     }
 
+    public static boolean canGoTo(float x, float y) {
+        boolean can = true;
+
+        for (Tile tile : TileSystem.tiles) {
+            if (tile.getX() > x && tile.getX() + Tile.getWidth() < x && tile.getY() > y && tile.getY() + Tile.getHeight() < y) {
+                can = false;
+                break;
+            }
+        }
+
+        return can;
+    }
+
     public int getX() {
         return x;
     }

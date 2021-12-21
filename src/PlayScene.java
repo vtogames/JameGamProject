@@ -3,6 +3,7 @@ import yield.objects.YldScene;
 public class PlayScene extends YldScene {
 
     public static TileSystem tileSystem;
+    public static Player player;
 
     @Override
     public void create() {
@@ -10,7 +11,7 @@ public class PlayScene extends YldScene {
 
         add(new GameInterface());
         add(tileSystem = new TileSystem());
-        add(new Player());
+        add(player = new Player());
         tileSystem.tilesFromImagePath("/testmap.png");
     }
 }
