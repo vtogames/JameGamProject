@@ -4,11 +4,11 @@ import java.awt.image.BufferedImage;
 public class Tile {
 
     private int x, y;
-    private static int width = 16, height = 16;
+    private final static int width = 16, height = 16;
     private TileType tileType;
     private Image tileImage;
 
-    public static Image WALL_IMAGE, GROUND_IMAGE;
+    public static Image WALL_IMAGE, GROUND_IMAGE, LAVA_IMAGE, SUN_IMAGE;
     public static BufferedImage TILE_SPRITESHEET;
 
     public Tile(TileType tileType, int x, int y) {
@@ -22,20 +22,13 @@ public class Tile {
             case GROUND:
                 tileImage = GROUND_IMAGE;
                 break;
-        }
-    }
-
-    public static boolean canGoTo(float x, float y) {
-        boolean can = true;
-
-        for (Tile tile : TileSystem.tiles) {
-            if (tile.getX() > x && tile.getX() + Tile.getWidth() < x && tile.getY() > y && tile.getY() + Tile.getHeight() < y) {
-                can = false;
+            case SUN:
+                tileImage = SUN_IMAGE;
                 break;
-            }
+            case LAVA:
+                tileImage = LAVA_IMAGE;
+                break;
         }
-
-        return can;
     }
 
     public int getX() {
@@ -66,16 +59,8 @@ public class Tile {
         return width;
     }
 
-    public static void setWidth(int width) {
-        Tile.width = width;
-    }
-
     public static int getHeight() {
         return height;
-    }
-
-    public static void setHeight(int height) {
-        Tile.height = height;
     }
 
     public Image getTileImage() {

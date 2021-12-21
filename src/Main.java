@@ -23,6 +23,9 @@ public class Main extends YldFrame {
         }
         Tile.WALL_IMAGE = Tile.TILE_SPRITESHEET.getSubimage(0, 0, 16, 16);
         Tile.GROUND_IMAGE = Tile.TILE_SPRITESHEET.getSubimage(16, 0, 16, 16);
+        Tile.LAVA_IMAGE = Tile.TILE_SPRITESHEET.getSubimage(16 * 2, 0, 16, 16);
+        Tile.SUN_IMAGE = Tile.TILE_SPRITESHEET.getSubimage(16 * 3, 0, 16, 16);
+
         add(new YldGame(285, 160, playScene = new PlayScene()));
         setVisible(true);
     }

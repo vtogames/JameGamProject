@@ -1,3 +1,3 @@
 public enum TileType {
-    WALL, GROUND
+    WALL, GROUND, LAVA, SUN
 }

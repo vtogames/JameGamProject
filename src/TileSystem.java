@@ -47,7 +47,12 @@ public class TileSystem extends YldObject {
                     case 0xFFFFFFFF:
                         tiles[actTile] = new Tile(TileType.WALL, xx, yy);
                         break;
-
+                    case 0xFFEFFF14:
+                        tiles[actTile] = new Tile(TileType.SUN, xx, yy);
+                        break;
+                    case 0xFFFF0000:
+                        tiles[actTile] = new Tile(TileType.LAVA, xx, yy);
+                        break;
                 }
                 if (tiles[actTile] == null)
                     tiles[actTile] = new Tile(TileType.GROUND, xx, yy);
