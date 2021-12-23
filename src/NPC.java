@@ -82,6 +82,33 @@ public class NPC {
                             "2What do you mean by: 'has already been'?",
                             "1You're going to find out in a little while."
                     };
+                } else if(TileSystem.actLevel == "map2") {
+                    npcIdle = new Image[12];
+                    npcIdle[0] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[1] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[2] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[3] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[4] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[5] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[6] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[7] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[8] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[9] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[10] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[11] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    dialogBoxImage = NPC.NPC_SPRITESHEET.getSubimage(144, 0, 16, 16).getScaledInstance(64, 64, Image.SCALE_FAST);
+                    disapear = true;
+                    dialogName = "TOGLIN, THE GOBLIN";
+
+                    dialog = new String[]{"1To save Christmas, we need gifts.",
+                            "1Because Christmas has nothing to do with family and stuff...",
+                            "1It's all about gifts.",
+                            "2I always knew that.",
+                            "1So we're going to go across the entire North Pole!",
+                            "2Why?",
+                            "1To make our adventure more exciting.",
+                            "2If you say so..."
+                    };
                 }
                 break;
             case GOBLIN_2:
@@ -129,7 +156,7 @@ public class NPC {
                             "1He's addicted to eCola.",
                             "2Ahhh, I know!",
                             "2That soda that was banned in 50 countries?",
-                            "1This one.",
+                            "1Exactly.",
                             "2aw man"};
                 }
                 break;
@@ -179,8 +206,7 @@ public class NPC {
                     dialog = new String[]{"1That's 'the stock'.",
                             "1Here where he keeps his entire arsenal of eCola",
                             "2How does he get here without leaving his house?",
-                            "1He's going through a secret passage.",
-                            "1No one's ever found that passage.",
+                            "1idk",
                             "2cool"};
                 }
 
@@ -227,9 +253,38 @@ public class NPC {
                     disapear = true;
                     dialogName = "TOGLIN, THE GOBLIN";
                     dialog = new String[]{"1This is the dump.",
-                    "1And watch out, the sun is starting to melt the snow here.",
-                    "2No problem.",
-                    "2What could happen if a snowman goes into the blazing sun?"
+                            "1And watch out, the sun is starting to melt the snow here.",
+                            "2No problem.",
+                            "2What could happen if a snowman goes into the blazing sun?"
+                    };
+                }
+                break;
+            case GOBLIN_7:
+                if (TileSystem.actLevel == "map1") {
+                    npcIdle = new Image[12];
+                    npcIdle[0] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[1] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[2] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[3] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[4] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[5] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[6] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[7] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[8] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[9] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[10] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[11] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    dialogBoxImage = NPC.NPC_SPRITESHEET.getSubimage(144, 0, 16, 16).getScaledInstance(64, 64, Image.SCALE_FAST);
+                    disapear = true;
+                    dialogName = "TOGLIN, THE GOBLIN";
+                    dialog = new String[]{"2Toglin.",
+                            "1What?",
+                            "2Let's save the Christmas?",
+                            "1Yep.",
+                            "2...",
+                            "1...",
+                            "2Easy like that?",
+                            "1I have nothing better to do today."
                     };
                 }
                 break;

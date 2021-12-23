@@ -23,19 +23,24 @@ public class Tile {
         switch (tileType) {
             case WALL:
                 tileImage[0] = WALL_IMAGE;
+                if (onTop) {
+                    this.onTop = false;
+                    tileImage[0] = GROUND_IMAGE;
+                }
                 break;
             case WALL_FREZED:
                 tileImage[0] = WALL_FREZED;
                 break;
             case GROUND:
             case SHOW_HUD:
+            case NEXT_LEVEL:
                 tileImage[0] = GROUND_IMAGE;
                 break;
             case SUN:
                 int r = SnowFilter.random.nextInt(3);
-                if(r == 0) {
+                if (r == 0) {
                     tileImage[0] = SUN_IMAGE1;
-                } else if(r == 1) {
+                } else if (r == 1) {
                     tileImage[0] = SUN_IMAGE2;
                 } else {
                     tileImage[0] = SUN_IMAGE3;

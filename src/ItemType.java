@@ -1,3 +1,3 @@
 public enum ItemType {
-    HAT
+    HAT, SNOW_BALL
 }

@@ -25,69 +25,88 @@ public class EnemyController extends YldObject {
                 canRender = false;
 
             e.canRender = canRender;
+            if (e.bouncer) {
+                e.walking = true;
+                if (e.actDir == 'r') {
+                    e.x += e.speed;
+                }
+                if (e.actDir == 'd') {
+                    e.y += e.speed;
+                }
+                if (e.actDir == 'l') {
+                    e.x -= e.speed;
+                }
+                if (e.actDir == 'u') {
+                    e.y -= e.speed;
+                }
+            }
 
-            if (canRender) {
+            if (e.life <= 0) {
+                enemies.remove(e);
+                if (e.toDrop != null)
+                    Item.items.add(new Item(e.toDrop, (int) e.x, (int) e.y));
+            }
 
-                if(e.type == EnemyType.SELF) {
-                    if (PlayScene.player.getAxis().position.getX() > e.x - Tile.getWidth() * e.vision && PlayScene.player.getAxis().position.getX() < e.x + Tile.getWidth() * e.vision + PlayScene.player.getAxis().scale.getX()
-                            && PlayScene.player.getAxis().position.getY() > e.y - Tile.getHeight() * e.vision && PlayScene.player.getAxis().position.getY() < e.y + Tile.getHeight() * e.vision + PlayScene.player.getAxis().scale.getY()) {
-                        e.walking = true;
-                        if (PlayScene.player.getAxis().position.getX() > e.x) {
-                            e.x += e.speed;
-                            e.facingR = true;
+            if (e.canRender && e.archer) {
+                if (PlayScene.player.getAxis().position.getX() > e.x - Tile.getWidth() * e.vision * 2 && PlayScene.player.getAxis().position.getX() < e.x + Tile.getWidth() * e.vision * 2 + PlayScene.player.getAxis().scale.getX()
+                        && PlayScene.player.getAxis().position.getY() > e.y - Tile.getHeight() * e.vision * 2 && PlayScene.player.getAxis().position.getY() < e.y + Tile.getHeight() * e.vision * 2 + PlayScene.player.getAxis().scale.getY()) {
+                    e.actDamage++;
+                    if (e.actDamage > e.damageRecool) {
+                        e.actDamage = 0;
+                        float xforce = 0, yforce = 0;
+                        if (PlayScene.player.getAxis().position.getX() > e.x + Tile.getWidth()) {
+                            xforce = e.throwForce;
                         }
-                        if (PlayScene.player.getAxis().position.getX() < e.x) {
-                            e.x -= e.speed;
-                            e.facingR = false;
+                        if (PlayScene.player.getAxis().position.getX() < e.x - Tile.getWidth()) {
+                            xforce = -e.throwForce;
                         }
-                        if (PlayScene.player.getAxis().position.getY() > e.y) {
-                            e.y += e.speed;
+                        if (PlayScene.player.getAxis().position.getY() > e.y + Tile.getHeight()) {
+                            yforce = e.throwForce;
                         }
-                        if (PlayScene.player.getAxis().position.getY() < e.y) {
-                            e.y -= e.speed;
+                        if (PlayScene.player.getAxis().position.getY() < e.y - Tile.getHeight()) {
+                            yforce = -e.throwForce;
                         }
-                    } else {
-                        e.walking = false;
-                    }
+                        SnowBall ball = new SnowBall();
+                        if (e.ballLife == 0)
+                            e.ballLife = 80;
+                        ball.life = e.ballLife;
+                        ball.xForce = xforce;
+                        ball.yForce = yforce;
+                        ball.x = e.x + e.enemyIdle[0].getWidth(null) / 4f;
+                        ball.y = e.y + e.enemyIdle[0].getHeight(null) / 4f;
 
-                    if (PlayScene.player.getAxis().position.getX() > e.x - Tile.getWidth() / 2f && PlayScene.player.getAxis().position.getX() < e.x + Tile.getWidth() / 2f + PlayScene.player.getAxis().scale.getX()
-                            && PlayScene.player.getAxis().position.getY() > e.y - Tile.getHeight() / 2f && PlayScene.player.getAxis().position.getY() < e.y + Tile.getHeight() / 2f + PlayScene.player.getAxis().scale.getY()) {
-                        e.actDamage++;
-                        if(e.actDamage > e.damageRecool) {
-                            e.actDamage = 0;
-                            Player.hit((int) e.damage);
-                        }
+                        SnowFilter.snowFlakes.add(ball);
                     }
                 }
+            }
 
-                //terminar bouce
+            if (TileSystem.tiles != null)
+                for (Tile tile : TileSystem.tiles) {
+                    if (tile != null) {
+                        if (tile.getTileType() == TileType.WALL || tile.getTileType() == TileType.WALL_FREZED) {
 
-                if (TileSystem.tiles != null)
-                    for (Tile tile : TileSystem.tiles) {
-                        if (tile != null) {
-                            if (tile.getTileType() == TileType.WALL || tile.getTileType() == TileType.WALL_FREZED) {
-
-                                if (e.x >= tile.getX() && e.x <= tile.getX() + Tile.getWidth() && e.y >= tile.getY() && e.y <= tile.getY() + Tile.getHeight() || e.x + e.enemyIdle[0].getWidth(null) >= tile.getX() && e.x + e.enemyIdle[0].getWidth(null) <= tile.getX() + Tile.getWidth() && e.y >= tile.getY() && e.y <= tile.getY() + Tile.getHeight() || e.x >= tile.getX() && e.x <= tile.getX() + Tile.getWidth() && e.y + e.enemyIdle[0].getHeight(null) >= tile.getY() && e.y + e.enemyIdle[0].getHeight(null) <= tile.getY() + Tile.getHeight() || e.x + e.enemyIdle[0].getWidth(null) >= tile.getX() && e.x + e.enemyIdle[0].getWidth(null) <= tile.getX() + Tile.getWidth() && e.y + e.enemyIdle[0].getHeight(null) >= tile.getY() && e.y + e.enemyIdle[0].getHeight(null) <= tile.getY() + Tile.getHeight()) {
-                                    if(e.actDir == 'r') {
-                                        e.actDir = 'd';
+                            if (e.bouncer) {
+                                if (e.x - 1 >= tile.getX() && e.x - 1 <= tile.getX() + Tile.getWidth() && e.y >= tile.getY() && e.y <= tile.getY() + Tile.getHeight()
+                                        || e.x - 1 + e.enemyIdle[0].getWidth(null) >= tile.getX() && e.x - 1 + e.enemyIdle[0].getWidth(null) <= tile.getX() + Tile.getWidth() && e.y >= tile.getY() && e.y <= tile.getY() + Tile.getHeight()
+                                        || e.x - 1 >= tile.getX() && e.x - 1 <= tile.getX() + Tile.getWidth() && e.y + e.enemyIdle[0].getHeight(null) >= tile.getY() && e.y + e.enemyIdle[0].getHeight(null) <= tile.getY() + Tile.getHeight()
+                                        || e.x - 1 + e.enemyIdle[0].getWidth(null) >= tile.getX() && e.x - 1 + e.enemyIdle[0].getWidth(null) <= tile.getX() + Tile.getWidth() && e.y + e.enemyIdle[0].getHeight(null) >= tile.getY() && e.y + e.enemyIdle[0].getHeight(null) <= tile.getY() + Tile.getHeight()) {
+                                    if (e.actDir == 'r') {
                                         e.x -= e.speed;
-                                    }
-                                    if(e.actDir == 'd') {
-                                        e.actDir = 'l';
+                                        e.actDir = 'd';
+                                    } else if (e.actDir == 'd') {
                                         e.y -= e.speed;
-                                    }
-                                    if(e.actDir == 'l') {
-                                        e.actDir = 'w';
+                                        e.actDir = 'l';
+                                    } else if (e.actDir == 'l') {
                                         e.x += e.speed;
-                                    }
-                                    if(e.actDir == 'w') {
-                                        e.actDir = 'r';
+                                        e.actDir = 'u';
+                                    } else if (e.actDir == 'u') {
                                         e.y += e.speed;
+                                        e.actDir = 'r';
                                     }
                                 }
-
+                            } else if (e.canRender) {
                                 //up left
-                                if (e.x - 1 >= tile.getX() && e.x - 1 <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight()) {
+                                if (e.x - 1 >= tile.getX() && e.x - 1 <= tile.getX() + Tile.getWidth() && e.y >= tile.getY() && e.y <= tile.getY() + Tile.getHeight()) {
                                     e.x += e.speed;
                                     e.y += e.speed;
                                 }
@@ -99,7 +118,7 @@ public class EnemyController extends YldObject {
                                 }
 
                                 //down left
-                                if (e.x - 1 >= tile.getX() && e.x - 1 <= tile.getX() + Tile.getWidth() && e.y + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight()) {
+                                if (e.x - 1 >= tile.getX() && e.x - 1 <= tile.getX() + Tile.getWidth() && e.y + e.enemyIdle[0].getHeight(null) >= tile.getY() && e.y + e.enemyIdle[0].getHeight(null) <= tile.getY() + Tile.getHeight()) {
                                     e.x += e.speed;
                                     e.y -= e.speed;
                                 }
@@ -109,16 +128,78 @@ public class EnemyController extends YldObject {
                                     e.x -= e.speed;
                                     e.y -= e.speed;
                                 }
+                            }
 
 
+                        }
+                    }
+
+                }
+
+
+            if (canRender) {
+
+                if (!e.bouncer) {
+                    if (PlayScene.player.getAxis().position.getX() > e.x - Tile.getWidth() * e.vision && PlayScene.player.getAxis().position.getX() < e.x + Tile.getWidth() * e.vision + PlayScene.player.getAxis().scale.getX()
+                            && PlayScene.player.getAxis().position.getY() > e.y - Tile.getHeight() * e.vision && PlayScene.player.getAxis().position.getY() < e.y + Tile.getHeight() * e.vision + PlayScene.player.getAxis().scale.getY()) {
+                        e.walking = true;
+                        if (e.walk) {
+                            if (e.runFromPlayer) {
+                                if (PlayScene.player.getAxis().position.getX() > e.x) {
+                                    e.x -= e.speed;
+                                }
+                                if (PlayScene.player.getAxis().position.getX() < e.x) {
+                                    e.x += e.speed;
+                                }
+                                if (PlayScene.player.getAxis().position.getY() > e.y) {
+                                    e.y -= e.speed;
+                                    e.facingR = false;
+                                }
+                                if (PlayScene.player.getAxis().position.getY() < e.y) {
+                                    e.y += e.speed;
+                                    e.facingR = true;
+                                }
+                            } else {
+                                if (PlayScene.player.getAxis().position.getX() > e.x) {
+                                    e.x += e.speed;
+                                    e.facingR = true;
+                                }
+                                if (PlayScene.player.getAxis().position.getX() < e.x) {
+                                    e.x -= e.speed;
+                                    e.facingR = false;
+                                }
+                                if (PlayScene.player.getAxis().position.getY() > e.y) {
+                                    e.y += e.speed;
+                                }
+                                if (PlayScene.player.getAxis().position.getY() < e.y) {
+                                    e.y -= e.speed;
+                                }
                             }
                         }
 
+
+                    } else {
+                        e.walking = false;
                     }
+                }
+                if (e.damage != 0 && !e.archer) {
+                    if (PlayScene.player.getAxis().position.getX() > e.x - Tile.getWidth() * e.hitVision && PlayScene.player.getAxis().position.getX() < e.x + Tile.getWidth() * e.hitVision + PlayScene.player.getAxis().scale.getX()
+                            && PlayScene.player.getAxis().position.getY() > e.y - Tile.getHeight() * e.hitVision && PlayScene.player.getAxis().position.getY() < e.y + Tile.getHeight() * e.hitVision + PlayScene.player.getAxis().scale.getY()) {
+                        e.actDamage++;
+                        if (e.actDamage > e.damageRecool) {
+                            e.actDamage = 0;
+                            if (!e.spawner)
+                                Player.hit((int) e.damage);
+                            else {
+                                enemies.add(new Enemy(e.toSpawn, e.x, e.y));
+                            }
+                        }
+                    }
+
+                }
 
 
             }
-
         });
     }
 
@@ -128,7 +209,20 @@ public class EnemyController extends YldObject {
         enemies.forEach(e -> {
             if (e.canRender) {
                 Image[] actImages = e.enemyIdle;
-                if (e.walking)
+                if (e.bouncer) {
+                    if (e.actDir == 'r') {
+                        actImages = e.enemyWalkingR;
+                    }
+                    if (e.actDir == 'd') {
+                        actImages = e.enemyWalkingR;
+                    }
+                    if (e.actDir == 'l') {
+                        actImages = e.enemyWalkingL;
+                    }
+                    if (e.actDir == 'u') {
+                        actImages = e.enemyWalkingL;
+                    }
+                } else if (e.walking)
                     if (e.facingR)
                         actImages = e.enemyWalkingR;
                     else
@@ -139,17 +233,36 @@ public class EnemyController extends YldObject {
                 else
                     setLayer(PlayScene.player.getLayer() + 1);
 
-                if(Player.counterToGameOver > 0 || Player.lifeColorC != 0)
-                    setLayer(PlayScene.player.getLayer() - 1);
                 e.actImageC++;
                 if (e.actImageC >= Enemy.imageCMax) {
                     e.actImageC = 0;
                     e.actImage++;
                 }
-                if (e.actImage >= actImages.length) {
+                int length = 0;
+                if (actImages != null)
+                    length = actImages.length;
+                if (e.actImage >= length) {
                     e.actImage = 0;
                 }
-                g.drawImage(actImages[e.actImage], (int) (e.x + TileDraw.cx), (int) (e.y + TileDraw.cy), null);
+                if (e.bouncer) {
+
+                    if (e.actDir == 'l' || e.actDir == 'r') {
+                        if (e.actImage > (actImages).length / 2 - 1)
+                            e.actImage = 0;
+                    }
+                    if (e.actDir == 'u' || e.actDir == 'd') {
+                        if (e.actImage < (actImages).length / 2)
+                            e.actImage = (actImages).length / 2;
+                    }
+                }
+
+                Image toDraw = e.enemyIdle[0];
+
+                if (actImages != null) {
+                    toDraw = actImages[e.actImage];
+                }
+
+                g.drawImage(toDraw, (int) (e.x + TileDraw.cx), (int) (e.y + TileDraw.cy), null);
             }
 
         });

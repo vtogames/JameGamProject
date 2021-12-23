@@ -12,7 +12,7 @@ public class Item {
 
     public int actImage, actC, recool = 40;
 
-    public static Image HAT_IMAGE;
+    public static Image HAT_IMAGE, SNOW_BALL_IMAGE;
     public static BufferedImage ITEM_SPRITESHEET;
 
     public Item(ItemType type, int x, int y) {
@@ -23,6 +23,9 @@ public class Item {
         switch (type) {
             case HAT:
                 itemImage[0] = HAT_IMAGE;
+                break;
+            case SNOW_BALL:
+                itemImage[0] = SNOW_BALL_IMAGE;
                 break;
         }
     }

@@ -3,10 +3,12 @@ import yield.display.Vector;
 import yield.objects.YldObject;
 import yield.util.YldAudio;
 import yield.util.YldInput;
+import yield.util.YldMouse;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Player extends YldObject {
@@ -14,15 +16,15 @@ public class Player extends YldObject {
     public static boolean canWalk = true, goToSpawn, burning, hitting, startHitting, renderPlayer = true, lastSideR, lastSideU = true, showFire, showHud;
     // public static int horizontal, vertical;
     public static float speed = 1f, walkSpeed = 1f, runSpeed = 1.3f, spawnX, spawnY;
-    public int animFrame, animFrameMax = 4, animFrameC, animFrameCMax = 8, ctgoC, fireAct, fireActC, hittingDamage = 0, invincibleLife;
+    public int animFrame, animFrameMax = 4, animFrameC, animFrameCMax = 8, fireAct, fireActC, hittingDamage = 0, invincibleLife, lx, ly;
     public static Vector movementVector = new Vector(0, 0);
     public static BufferedImage PLAYER_SPRITESHEET;
-    public boolean moving, created, running;
+    public boolean moving, created, running, canPressMouse;
     public YldAudio snow1 = new YldAudio("/snow1.wav"), snow2 = new YldAudio("/snow2.wav");
-    public static int life, lifeColorC, lifeFrameC, lifeFrameCMax = 60, enterColorC, counterToGameOver, invincible, actInvincible;
-    public Image idleR[], idleL[], idleU[], runD[], runU[], runL[], runR[], drawImage, lifeGoodImage, lifeMediumImage, lifeBadImage, deadImage, fireImage[], invincibleImages[];
+    public static int life, lifeColorC, lifeFrameC, lifeFrameCMax = 60, enterColorC, counterToGameOver, invincible, actInvincible, ctgoC, lifes = 3;
+    public static Image idleR[], idleL[], idleU[], runD[], runU[], runL[], runR[], drawImage, lifeGoodImage, lifeMediumImage, lifeBadImage, deadImage, fireImage[], invincibleImages[];
     public static Image dialogImage;
-    public static HashSet<ItemType> items = new HashSet<>();
+    public static ArrayList<ItemType> items = new ArrayList<>();
     public static char dir = 'u';
     public static HashSet<RIP> rips = new HashSet<>();
     public YldAudio hitSound = new YldAudio("/hit.wav"), deadSound = new YldAudio("/dead.wav");
@@ -101,12 +103,13 @@ public class Player extends YldObject {
         hitting = false;
         lifeFrameC = 0;
         lifeColorC = 0;
+
     }
 
     @Override
     public void update() {
         super.update();
-        setLayer(30);
+
         if (getFrames() < 4) {
             life = 100;
         }
@@ -119,19 +122,27 @@ public class Player extends YldObject {
             try {
                 if (YldInput.isKeyPressed(KeyEvent.VK_UP) || YldInput.isKeyPressed(KeyEvent.VK_W)) {
                     movementVector.setY(-1 * speed);
+                    lx = -1;
+                    ly = 0;
                     dir = 'u';
                 }
                 if (YldInput.isKeyPressed(KeyEvent.VK_DOWN) || YldInput.isKeyPressed(KeyEvent.VK_S)) {
                     movementVector.setY(1 * speed);
+                    lx = 1;
+                    ly = 0;
                     dir = 'd';
                 }
 
                 if (YldInput.isKeyPressed(KeyEvent.VK_LEFT) || YldInput.isKeyPressed(KeyEvent.VK_A)) {
                     movementVector.setX(-1 * speed);
+                    ly = -1;
+                    lx = 0;
                     dir = 'l';
                 }
                 if (YldInput.isKeyPressed(KeyEvent.VK_RIGHT) || YldInput.isKeyPressed(KeyEvent.VK_D)) {
                     movementVector.setX(1 * speed);
+                    ly = 1;
+                    lx = 0;
                     dir = 'r';
                 }
 
@@ -156,6 +167,12 @@ public class Player extends YldObject {
                         if (axis.position.getX() >= tile.getX() && axis.position.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() + axis.scale.getX() >= tile.getX() && axis.position.getX() + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() >= tile.getX() && axis.position.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() + axis.scale.getX() >= tile.getX() && axis.position.getX() + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight()) {
                             burning = true;
                             hittingDamage = 8;
+                        }
+                    }
+
+                    if (tile.getTileType() == TileType.NEXT_LEVEL) {
+                        if (axis.position.getX() >= tile.getX() && axis.position.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() + axis.scale.getX() >= tile.getX() && axis.position.getX() + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() >= tile.getY() && axis.position.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() >= tile.getX() && axis.position.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight() || axis.position.getX() + axis.scale.getX() >= tile.getX() && axis.position.getX() + axis.scale.getX() <= tile.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= tile.getY() && axis.position.getY() + axis.scale.getY() <= tile.getY() + Tile.getHeight()) {
+                            PlayScene.nextLevel();
                         }
                     }
 
@@ -201,6 +218,45 @@ public class Player extends YldObject {
                 }
 
             }
+        if (YldMouse.isPressing()) {
+            if (canPressMouse) {
+
+                canPressMouse = false;
+                for (ItemType item : items) {
+                    if (item == ItemType.SNOW_BALL) {
+                        items.remove(item);
+                        SnowBall ball = new SnowBall();
+                        ball.x = axis.position.getX();
+                        ball.y = axis.position.getY();
+                        ball.attackPlayer = false;
+                        ball.life = 60;
+                        ball.speed = 2f;
+                        float x = movementVector.getX(), y = movementVector.getY();
+                        if (x == 0 && y == 0) {
+                            x = ly;
+                            y = lx;
+                        }
+                        if (x > 0) {
+                            ball.xForce = ball.speed;
+                        }
+                        if (x < 0) {
+                            ball.xForce = -ball.speed;
+                        }
+                        if (y > 0) {
+                            ball.yForce = ball.speed;
+                        }
+                        if (y < 0) {
+                            ball.yForce = -ball.speed;
+                        }
+
+                        SnowFilter.snowFlakes.add(ball);
+                        break;
+                    }
+                }
+            }
+        } else {
+            canPressMouse = true;
+        }
         Item.items.forEach(item -> {
             if (axis.position.getX() >= item.getX() && axis.position.getX() <= item.getX() + Tile.getWidth() && axis.position.getY() >= item.getY() && axis.position.getY() <= item.getY() + Tile.getHeight() || axis.position.getX() + axis.scale.getX() >= item.getX() && axis.position.getX() + axis.scale.getX() <= item.getX() + Tile.getWidth() && axis.position.getY() >= item.getY() && axis.position.getY() <= item.getY() + Tile.getHeight() || axis.position.getX() >= item.getX() && axis.position.getX() <= item.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= item.getY() && axis.position.getY() + axis.scale.getY() <= item.getY() + Tile.getHeight() || axis.position.getX() + axis.scale.getX() >= item.getX() && axis.position.getX() + axis.scale.getX() <= item.getX() + Tile.getWidth() && axis.position.getY() + axis.scale.getY() >= item.getY() && axis.position.getY() + axis.scale.getY() <= item.getY() + Tile.getHeight()) {
                 Item.items.remove(item);
@@ -335,18 +391,23 @@ public class Player extends YldObject {
             canWalk = false;
             if (counterToGameOver == 0) {
                 rips.add(new RIP((int) axis.position.getX(), (int) axis.position.getY()));
-                TileSystem.toAddEnemiesW.add(new Enemy(EnemyType.SELF, axis.position.getX(), axis.position.getY()));
+                TileSystem.toAddEnemiesW.add(new EnemyCache(EnemyType.SELF, axis.position.getX(), axis.position.getY()));
                 deadSound.play(false);
                 PlayScene.dialogueBox.end = true;
+                if (TileSystem.actLevel != "map1")
+                    lifes--;
             }
 
 
             counterToGameOver++;
             if (counterToGameOver == 500) {
-                YldGame.switchScene("PlayScene");
+                if (lifes > 0)
+                    YldGame.switchScene("PlayScene");
+                else
+                    YldGame.switchScene("GameOverScene");
             }
             try {
-                if (YldInput.getKeysSet().size() != 0 && counterToGameOver > 60) counterToGameOver = 499;
+                if (YldInput.isKeyPressed(KeyEvent.VK_ENTER) && counterToGameOver > 60) counterToGameOver = 499;
             } catch (Exception ignore) {
             }
 
@@ -378,17 +439,7 @@ public class Player extends YldObject {
         if (drawImage == null) drawImage = idleR[0];
 
         Graphics2D g2 = (Graphics2D) g;
-
-        rips.forEach(r -> g.drawImage(RIP.ripImage, r.x + TileDraw.cx, r.y + TileDraw.cy, null));
-
-        Image lifeImage = lifeGoodImage;
-
-        if (life < 60 && life > 30)
-            lifeImage = lifeMediumImage;
-        if (life <= 30)
-            lifeImage = lifeBadImage;
-        if (life == 0)
-            lifeImage = deadImage;
+        setLayer(30);
 
         if (renderPlayer) {
             g2.setColor(new Color(0, 0, 0, 20));
@@ -403,34 +454,6 @@ public class Player extends YldObject {
         if (invincible > 0) {
             g.drawImage(invincibleImages[actInvincible], (int) (axis.position.getX() + Camera.x), (int) (axis.position.getY() + Camera.y), Tile.getWidth(), Tile.getHeight(), null);
         }
-
-
-        if (showHud) {
-            String lifeString = "life: " + Player.life;
-            g.setFont(new Font("arial", 1, 10));
-            g2.setColor(new Color(0, 0, 0, 150));
-            g.fillRoundRect(YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString) - 2, 0, g.getFontMetrics().stringWidth(lifeString) + 2, g.getFont().getSize() + 5 + lifeImage.getHeight(null), 8, 8);
-            g.setColor(Color.white);
-
-            g.drawString(lifeString, YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString), g.getFont().getSize());
-            g.drawImage(lifeImage, YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString) / 2 - lifeImage.getWidth(null) / 2, g.getFont().getSize() + 2, null);
-        }
-
-
-        if (lifeColorC > 255) lifeColorC = 255;
-        if (lifeColorC < 0) lifeColorC = 0;
-        ctgoC = counterToGameOver - 150;
-        if (ctgoC > 255) ctgoC = 255;
-        if (ctgoC < 0) ctgoC = 0;
-
-        g2.setColor(new Color(255, 0, 0, lifeColorC));
-        g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
-        g2.setColor(new Color(0, 0, 0, ctgoC));
-        g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
-        if (enterColorC < 0) enterColorC = 0;
-        if (enterColorC > 255) enterColorC = 255;
-        g2.setColor(new Color(255, 255, 255, enterColorC));
-        g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
 
     }
 }

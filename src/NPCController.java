@@ -23,8 +23,12 @@ public class NPCController extends YldObject {
                 try {
                     if (npc.interactable) {
                         if (YldInput.isKeyPressed(KeyEvent.VK_SPACE)) {
-                            if (PlayScene.dialogueBox.can)
+                            if (PlayScene.dialogueBox.can) {
                                 PlayScene.dialogueBox.show(npc.dialog, npc.dialogBoxImage, Player.dialogImage, npc.dialogName);
+                                if(npc.disapear)
+                                PlayScene.dialogueBox.toDesapear = npc;
+                            }
+
                         }
                         DialogueBox.canInteract = true;
                     }

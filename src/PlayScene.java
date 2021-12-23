@@ -6,7 +6,7 @@ public class PlayScene extends YldScene {
 
     public static Player player;
     public static DialogueBox dialogueBox;
-    public YldAudio wind;
+    public static YldAudio wind;
 
     @Override
     public void create() {
@@ -18,20 +18,30 @@ public class PlayScene extends YldScene {
         add(dialogueBox = new DialogueBox());
         add(new NPCController());
         add(new EnemyController());
+        add(new RIPS());
         wind = new YldAudio("/wind.wav");
     }
 
     @Override
     public void update() {
         super.update();
-        if(TileSystem.actLevel == "map1") {
+        if(TileSystem.actLevel == "map1" || TileSystem.actLevel == "map2") {
             wind.play(true);
+        }
+    }
+
+    public static void nextLevel() {
+        if(TileSystem.actLevel == "map1") {
+            TileSystem.tilesFromImagePath("map2");
         }
     }
 
     @Override
     public void enter() {
         super.enter();
-        TileSystem.tilesFromImagePath("map1");
+        if(TileSystem.actLevel == null) {
+            TileSystem.actLevel = "map1";
+        }
+        TileSystem.tilesFromImagePath(TileSystem.actLevel);
     }
 }

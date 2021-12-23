@@ -5,7 +5,7 @@ import yield.objects.YldObject;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import  java.util.List;
+import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,8 +15,8 @@ public class TileSystem extends YldObject {
 
     public static Tile[] tiles;
     public static List<NPC> npcs = new ArrayList<>();
-    public static HashSet<Enemy> toAddEnemies = new HashSet<>();
-    public static HashSet<Enemy> toAddEnemiesW = new HashSet<>();
+    public static HashSet<EnemyCache> toAddEnemies = new HashSet<>();
+    public static HashSet<EnemyCache> toAddEnemiesW = new HashSet<>();
     public static String actLevel;
 
     @Override
@@ -64,6 +64,9 @@ public class TileSystem extends YldObject {
                     case 0xFFFFFFFF:
                         tiles[actTile] = new Tile(TileType.WALL, xx, yy, false);
                         break;
+                    case 0xFFF7F7F7:
+                        tiles[actTile] = new Tile(TileType.WALL, xx, yy, true);
+                        break;
                     case 0xFFEFFF14:
                         tiles[actTile] = new Tile(TileType.SUN, xx, yy, false);
                         break;
@@ -81,6 +84,9 @@ public class TileSystem extends YldObject {
                         break;
                     case 0xFF7AFFD9:
                         Item.items.add(new Item(ItemType.HAT, xx, yy));
+                        break;
+                    case 0xFFDAD8FF:
+                        Item.items.add(new Item(ItemType.SNOW_BALL, xx, yy));
                         break;
                     case 0xFFFF77FC:
                         npcs.add(new NPC(NPCType.DOOR_LOCKED, xx, yy));
@@ -100,14 +106,32 @@ public class TileSystem extends YldObject {
                     case 0xFFEA9A19:
                         npcs.add(new NPC(NPCType.GOBLIN_5, xx, yy));
                         break;
-                    case 0xFF54240F:
-                        npcs.add(new NPC(NPCType.TRASH, xx, yy));
-                        break;
                     case 0xFFE8A843:
                         npcs.add(new NPC(NPCType.GOBLIN_6, xx, yy));
                         break;
+                    case 0xFFE8A852:
+                        npcs.add(new NPC(NPCType.GOBLIN_7, xx, yy));
+                        break;
+                    case 0xFF54240F:
+                        npcs.add(new NPC(NPCType.TRASH, xx, yy));
+                        break;
+                    case 0xFF00FF1D:
+                        tiles[actTile] = new Tile(TileType.NEXT_LEVEL, xx, yy, false);
+                        break;
                     case 0xFFE5E5E5:
                         tiles[actTile] = new Tile(TileType.WALL_FREZED, xx, yy, false);
+                        break;
+                    case 0xFF5CCFE6:
+                        toAddEnemies.add(new EnemyCache(EnemyType.ICE_BOUNCER, xx * Tile.getWidth(), yy * Tile.getHeight()));
+                        break;
+                    case 0xFFFF5900:
+                        toAddEnemies.add(new EnemyCache(EnemyType.SELF, xx * Tile.getWidth(), yy * Tile.getHeight()));
+                        break;
+                    case 0xFFFFA6A3:
+                        toAddEnemies.add(new EnemyCache(EnemyType.PUMPKIN, xx * Tile.getWidth(), yy * Tile.getHeight()));
+                        break;
+                    case 0xFFAE7CFF:
+                        toAddEnemies.add(new EnemyCache(EnemyType.WIZARD, xx * Tile.getWidth(), yy * Tile.getHeight()));
                         break;
 
                 }
@@ -139,10 +163,13 @@ public class TileSystem extends YldObject {
 
             }
         }
-        for (Enemy e : toAddEnemies) {
+
+        Player.showHud = false;
+
+        for (EnemyCache e : toAddEnemies) {
             EnemyController.enemies.add(new Enemy(e.type, e.x, e.y));
         }
-        for (Enemy e : toAddEnemiesW) {
+        for (EnemyCache e : toAddEnemiesW) {
             EnemyController.enemies.add(new Enemy(e.type, e.x, e.y));
         }
         toAddEnemies.clear();

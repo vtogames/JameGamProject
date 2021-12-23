@@ -1,3 +1,3 @@
 public enum EnemyType {
-    SELF, WATER_BOUNCER
+    SELF, ICE_BOUNCER, PUMPKIN, WIZARD, ANAO, WOLF
 }

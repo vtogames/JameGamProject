@@ -13,10 +13,11 @@ public class DialogueBox extends YldObject {
     public int actS, max, actC, cMax = 2, actM, startFrames, endFrames, canInteractFrames, toHideInteract;
     public String actMessage = "", messages[];
     public Image[] images;
-    public boolean playerSpeaking;
+    public boolean playerSpeaking, force;
     public Image playerImage;
     public YldAudio beep = new YldAudio("/beep.wav"), enter = new YldAudio("/enter.wav");
     public String otherName = "???";
+    public NPC toDesapear;
 
     public static boolean canInteract;
 
@@ -73,10 +74,12 @@ public class DialogueBox extends YldObject {
                 endAct = true;
             }
             if (YldInput.isKeyPressed(KeyEvent.VK_ESCAPE)) {
+                force = true;
                 end = true;
             }
             if (YldInput.isKeyPressed(KeyEvent.VK_SPACE) && getFrames() - startFrames > 20) {
                 if (actM < messages.length - 1) {
+                    force = false;
                     enter.play(false);
                     actS = 0;
                     startFrames = getFrames();
@@ -95,6 +98,9 @@ public class DialogueBox extends YldObject {
 
             }
             if (end) {
+                if(toDesapear != null && !force)
+                    TileSystem.npcs.remove(toDesapear);
+                toDesapear = null;
                 xs = 0;
                 xs2 = 0;
                 xs3 = 0;
