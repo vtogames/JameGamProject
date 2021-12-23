@@ -11,7 +11,7 @@ public class Tile {
 
     public int actImage, actC, recool = 40;
 
-    public static Image WALL_IMAGE, WALL_FREZED, GROUND_IMAGE, LAVA_IMAGE, SUN_IMAGE1, SUN_IMAGE2, SUN_IMAGE3, FIRE_IMAGE1, FIRE_IMAGE2, ICE_IMAGE, WATER_1, WATER_2, WATER_3, SANTAS_HOUSE, STOCK;
+    public static Image WALL_IMAGE, WALL_FREZED, GROUND_IMAGE, LAVA_IMAGE, SUN_IMAGE1, SUN_IMAGE2, SUN_IMAGE3, FIRE_IMAGE1, FIRE_IMAGE2, ICE_IMAGE, WATER_1, WATER_2, WATER_3, SANTAS_HOUSE, STOCK, BIG_HOUSE;
     public static BufferedImage TILE_SPRITESHEET;
 
     public Tile(TileType tileType, int x, int y, boolean onTop) {
@@ -63,6 +63,9 @@ public class Tile {
                 break;
             case STOCK:
                 tileImage[0] = STOCK;
+                break;
+            case BIG_HOUSE:
+                tileImage[0] = BIG_HOUSE;
                 break;
         }
     }

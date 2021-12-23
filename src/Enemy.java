@@ -3,8 +3,8 @@ import java.awt.image.BufferedImage;
 
 public class Enemy {
 
-    public Image enemyIdle[], enemyWalkingR[], enemyWalkingL[];
-    public boolean walking, canRender, bouncer, spawner, walk = true, forward = false;
+    public Image enemyIdle[], enemyWalkingR[], enemyWalkingL[], attack[];
+    public boolean walking, canRender, bouncer, spawner, walk = true, forward = false, attacking;
     public float speed = 1f, x, y, vision, throwForce, hitVision = 0.5f;
     public boolean facingR, archer, runFromPlayer;
     public char actDir = 'd';
@@ -96,6 +96,7 @@ public class Enemy {
                 enemyWalkingL[2] = ENEMY_SPRITESHEET.getSubimage(64 + 16 * 2, 32, 16, 16);
                 enemyWalkingL[3] = ENEMY_SPRITESHEET.getSubimage(64 + 16 * 3, 32, 16, 16);
                 life = 3;
+                forward = true;
                 archer = true;
                 runFromPlayer = true;
                 vision = 2;
@@ -156,21 +157,25 @@ public class Enemy {
                 enemyIdle[6] = enemyIdle[4];
                 enemyIdle[7] = enemyIdle[4];
                 enemyWalkingR = new Image[4];
-                enemyWalkingR[0] = ENEMY_SPRITESHEET.getSubimage(32, 0, 16, 16);
-                enemyWalkingR[1] = ENEMY_SPRITESHEET.getSubimage(32 + 16, 0, 16, 16);
-                enemyWalkingR[2] = ENEMY_SPRITESHEET.getSubimage(32 + 16 * 2, 0, 16, 16);
-                enemyWalkingR[3] = ENEMY_SPRITESHEET.getSubimage(32 + 16, 0, 16, 16);
+                enemyWalkingR[0] = ENEMY_SPRITESHEET.getSubimage(0, 80, 16, 16);
+                enemyWalkingR[1] = ENEMY_SPRITESHEET.getSubimage(16, 80, 16, 16);
+                enemyWalkingR[2] = ENEMY_SPRITESHEET.getSubimage(16 * 2, 80, 16, 16);
+                enemyWalkingR[3] = ENEMY_SPRITESHEET.getSubimage(16, 80, 16, 16);
                 enemyWalkingL = new Image[4];
-                enemyWalkingL[0] = ENEMY_SPRITESHEET.getSubimage(32 + 48, 0, 16, 16);
-                enemyWalkingL[1] = ENEMY_SPRITESHEET.getSubimage(32 + 16 + 48, 0, 16, 16);
-                enemyWalkingL[2] = ENEMY_SPRITESHEET.getSubimage(32 + 16 * 2 + 48, 0, 16, 16);
-                enemyWalkingL[3] = ENEMY_SPRITESHEET.getSubimage(32 + 16 + 48, 0, 16, 16);
+                enemyWalkingL[0] = ENEMY_SPRITESHEET.getSubimage(0, 80 + 16, 16, 16);
+                enemyWalkingL[1] = ENEMY_SPRITESHEET.getSubimage(16, 80 + 16, 16, 16);
+                enemyWalkingL[2] = ENEMY_SPRITESHEET.getSubimage(16 * 2, 80 + 16, 16, 16);
+                enemyWalkingL[3] = ENEMY_SPRITESHEET.getSubimage(16, 80 + 16, 16, 16);
+                attack = new Image[3];
+                attack[0] = ENEMY_SPRITESHEET.getSubimage(112, 96, 16, 16);
+                attack[1] = ENEMY_SPRITESHEET.getSubimage(112 + 16, 96, 16, 16);
+                attack[2] = ENEMY_SPRITESHEET.getSubimage(112 + 16 * 2, 96, 16, 16);
                 forward = true;
-                life = 2;
-                damage = 2;
+                life = 4;
+                damage = 20;
                 vision = 2;
                 damageRecool = 30;
-                speed = 0.4f;
+                speed = 0.3f;
                 actDamage = damageRecool;
                 break;
         }

@@ -27,6 +27,7 @@ public class Main extends YldFrame {
             Item.ITEM_SPRITESHEET = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/item_spritesheet.png")));
             Tile.STOCK = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/stock.png")));
             Tile.SANTAS_HOUSE = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/House.png")));
+            Tile.BIG_HOUSE = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/bighouse.png")));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,6 +50,7 @@ public class Main extends YldFrame {
         Tile.WATER_3 = Tile.TILE_SPRITESHEET.getSubimage(112 + 16 * 2, 16, 16, 16);
         Item.HAT_IMAGE = Item.ITEM_SPRITESHEET.getSubimage(0, 0, 16, 16);
         Item.SNOW_BALL_IMAGE = Item.ITEM_SPRITESHEET.getSubimage(0, 16, 16, 16);
+        Item.HEART_IMAGE = Item.ITEM_SPRITESHEET.getSubimage(16, 16, 16, 16);
 
 
         add(new YldGame(285, 160, playScene = new PlayScene()));

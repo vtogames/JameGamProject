@@ -104,10 +104,11 @@ public class NPC {
                             "1Because Christmas has nothing to do with family and stuff...",
                             "1It's all about gifts.",
                             "2I always knew that.",
-                            "1So we're going to go across the entire North Pole!",
+                            "1And to get presents we need to steal them.",
                             "2Why?",
-                            "1To make our adventure more exciting.",
-                            "2If you say so..."
+                            "1Do you want to save Christmas or not?",
+                            "2Yea, but...",
+                            "1Shut!"
                     };
                 }
                 break;
@@ -131,6 +132,30 @@ public class NPC {
                     dialogName = "TOGLIN, THE GOBLIN";
                     dialog = new String[]{"1This is Santa's house.", "1He hasn't been out of there in four months.",
                             "2gosh"};
+                } else if(TileSystem.actLevel == "map2") {
+                    npcIdle = new Image[12];
+                    npcIdle[0] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[1] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[2] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[3] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[4] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[5] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[6] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[7] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[8] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[9] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[10] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[11] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    dialogBoxImage = NPC.NPC_SPRITESHEET.getSubimage(144, 0, 16, 16).getScaledInstance(64, 64, Image.SCALE_FAST);
+                    disapear = true;
+                    dialogName = "TOGLIN, THE GOBLIN";
+                    dialog = new String[]{"1Let's get the presents from this house!",
+                            "2Okay",
+                            "1To enter we will need a key...",
+                            "1It must be somewhere in this forest...",
+                            "1Search.",
+                            "2Okay"
+                    };
                 }
 
                 break;
@@ -230,6 +255,13 @@ public class NPC {
             case TRASH:
                 npcIdle = new Image[1];
                 npcIdle[0] = NPC.NPC_SPRITESHEET.getSubimage(0, 16, 32, 32);
+                interactable = false;
+                yOff = 16;
+                xOff = 16;
+                break;
+            case SNOW_TREE:
+                npcIdle = new Image[1];
+                npcIdle[0] = NPC.NPC_SPRITESHEET.getSubimage(32, 0, 32, 32);
                 interactable = false;
                 yOff = 16;
                 xOff = 16;

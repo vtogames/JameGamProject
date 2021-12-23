@@ -41,7 +41,7 @@ public class RIPS extends YldObject {
         if (Player.life == 0)
             lifeImage = Player.deadImage;
 
-        if (Player.showHud) {
+        /*if (Player.showHud) {
             String lifeString = "life: " + Player.life;
             g.setFont(new Font("arial", 1, 10));
             g2.setColor(new Color(0, 0, 0, 150));
@@ -50,17 +50,37 @@ public class RIPS extends YldObject {
 
             g.drawString(lifeString, YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString), g.getFont().getSize());
             g.drawImage(lifeImage, YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(lifeString) / 2 - lifeImage.getWidth(null) / 2, g.getFont().getSize() + 2, null);
-        }
+        }*/
+        if (!PlayScene.dialogueBox.showing) {
+            int y = 0;
+            if (Player.showHud) {
+                y = 16;
+                int m2 = 0;
+                for (int i = 0; i < Player.life / 10; i++) {
+                    g.drawImage(Item.HEART_IMAGE, m2, 0, null);
+                    m2 += Item.HEART_IMAGE.getWidth(null) / 1.5;
+                }
+            }
+            int m = 0;
+            for (int i = 0; i < Player.items.size(); i++) {
+                ItemType item = Player.items.get(i);
+                if (item == ItemType.SNOW_BALL) {
+                    g.drawImage(SnowBall.SNOW_BALL_IMAGE, m, y, null);
+                    m += SnowBall.SNOW_BALL_IMAGE.getWidth(null) / 2;
+                }
+            }
 
-        if(TileSystem.actLevel != "map1") {
-            String lifesString = Player.lifes + "";
-            Image i = Player.dialogImage.getScaledInstance(16, 16, Image.SCALE_FAST);
-            g2.setColor(new Color(0, 0, 0, 100));
-            g.fillRect(0, 0, i.getWidth(null) + 6, i.getHeight(null));
-            g.drawImage(i, 0, 0, Tile.getWidth(), Tile.getHeight(), null);
-            g.setColor(Color.white);
-            g.setFont(new Font("arial", 1, 8));
-            g.drawString(lifesString, i.getWidth(null), i.getHeight(null) / 2 + g.getFont().getSize() / 2);
+
+            if (TileSystem.actLevel != "map1") {
+                String lifesString = Player.lifes + "";
+                Image i = Player.dialogImage.getScaledInstance(16, 16, Image.SCALE_FAST);
+                g2.setColor(new Color(0, 0, 0, 100));
+                g.fillRect(0, YldGame.getImage().getHeight() - i.getHeight(null), i.getWidth(null) + 6, i.getHeight(null));
+                g.drawImage(i, 0, YldGame.getImage().getHeight() - i.getHeight(null), Tile.getWidth(), Tile.getHeight(), null);
+                g.setColor(Color.white);
+                g.setFont(new Font("arial", 1, 8));
+                g.drawString(lifesString, i.getWidth(null), i.getHeight(null) / 2 + g.getFont().getSize() / 2 + YldGame.getImage().getHeight() - i.getHeight(null));
+            }
         }
 
 
@@ -70,7 +90,9 @@ public class RIPS extends YldObject {
         if (Player.ctgoC > 255) Player.ctgoC = 255;
         if (Player.ctgoC < 0) Player.ctgoC = 0;
 
-        g2.setColor(new Color(255, 0, 0, Player.lifeColorC));
+        if (!Player.green) g2.setColor(new Color(255, 0, 0, Player.lifeColorC));
+        else g2.setColor(new Color(0, 255, 0, Player.lifeColorC));
+
         g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
         g2.setColor(new Color(0, 0, 0, Player.ctgoC));
         g.fillRect(0, 0, YldGame.getImage().

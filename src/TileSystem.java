@@ -115,6 +115,9 @@ public class TileSystem extends YldObject {
                     case 0xFF54240F:
                         npcs.add(new NPC(NPCType.TRASH, xx, yy));
                         break;
+                    case 0xFF37946E:
+                        npcs.add(new NPC(NPCType.SNOW_TREE, xx, yy));
+                        break;
                     case 0xFF00FF1D:
                         tiles[actTile] = new Tile(TileType.NEXT_LEVEL, xx, yy, false);
                         break;
@@ -133,18 +136,13 @@ public class TileSystem extends YldObject {
                     case 0xFFAE7CFF:
                         toAddEnemies.add(new EnemyCache(EnemyType.WIZARD, xx * Tile.getWidth(), yy * Tile.getHeight()));
                         break;
-
-                }
-                if (Objects.equals(name, "testmap3")) {
-                    switch (actPixel) {
-                        case 0xFFFF7130:
+                    case 0xFFFF5349:
+                        toAddEnemies.add(new EnemyCache(EnemyType.WOLF, xx * Tile.getWidth(), yy * Tile.getHeight()));
+                        break;
+                        /*case 0xFFFF7130:
                             //npcs.add(new NPC(NPCType.one, xx, yy));
                             npcs.add(new NPC(NPCType.SELF_ENEMY, xx, yy));
-                            break;
-                    }
-                }
-                if (Objects.equals(name, "map1")) {
-                    switch (actPixel) {
+                            break;*/
 
                         case 0xFFFF4486:
                             tiles[actTile] = new Tile(TileType.SANTAS_HOUSE, xx, yy, true);
@@ -156,7 +154,12 @@ public class TileSystem extends YldObject {
                             tiles[actTile] = new Tile(TileType.STOCK, xx, yy, true);
                             break;
 
-                    }
+
+                        case 0xFF5C6B99:
+                            tiles[actTile] = new Tile(TileType.BIG_HOUSE, xx, yy, true);
+                            break;
+
+
                 }
                 if (tiles[actTile] == null)
                     tiles[actTile] = new Tile(TileType.GROUND, xx, yy, false);

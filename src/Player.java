@@ -19,7 +19,11 @@ public class Player extends YldObject {
     public int animFrame, animFrameMax = 4, animFrameC, animFrameCMax = 8, fireAct, fireActC, hittingDamage = 0, invincibleLife, lx, ly;
     public static Vector movementVector = new Vector(0, 0);
     public static BufferedImage PLAYER_SPRITESHEET;
-    public boolean moving, created, running, canPressMouse;
+    public boolean moving;
+    public boolean created;
+    public boolean running;
+    public boolean canPressMouse;
+    public static boolean green;
     public YldAudio snow1 = new YldAudio("/snow1.wav"), snow2 = new YldAudio("/snow2.wav");
     public static int life, lifeColorC, lifeFrameC, lifeFrameCMax = 60, enterColorC, counterToGameOver, invincible, actInvincible, ctgoC, lifes = 3;
     public static Image idleR[], idleL[], idleU[], runD[], runU[], runL[], runR[], drawImage, lifeGoodImage, lifeMediumImage, lifeBadImage, deadImage, fireImage[], invincibleImages[];
@@ -229,7 +233,7 @@ public class Player extends YldObject {
                         ball.x = axis.position.getX();
                         ball.y = axis.position.getY();
                         ball.attackPlayer = false;
-                        ball.life = 60;
+                        ball.life = 80;
                         ball.speed = 2f;
                         float x = movementVector.getX(), y = movementVector.getY();
                         if (x == 0 && y == 0) {
@@ -424,11 +428,22 @@ public class Player extends YldObject {
 
     public static void hit(int hittingDamage) {
         if (counterToGameOver == 0) {
-            showHud = true;
-            PlayScene.player.hitSound.getClip().setFramePosition(0);
-            PlayScene.player.hitSound.play(false);
-            life -= hittingDamage;
-            lifeColorC = 120;
+            if(hittingDamage >= 0) {
+                showHud = true;
+                green = false;
+                PlayScene.player.hitSound.getClip().setFramePosition(0);
+                PlayScene.player.hitSound.play(false);
+                life -= hittingDamage;
+                lifeColorC = 120;
+            } else {
+                showHud = true;
+                green = true;
+                PlayScene.player.hitSound.getClip().setFramePosition(0);
+                PlayScene.player.hitSound.play(false);
+                life -= hittingDamage;
+                lifeColorC = 120;
+            }
+
         }
 
     }

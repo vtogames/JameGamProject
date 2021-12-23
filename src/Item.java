@@ -12,7 +12,7 @@ public class Item {
 
     public int actImage, actC, recool = 40;
 
-    public static Image HAT_IMAGE, SNOW_BALL_IMAGE;
+    public static Image HAT_IMAGE, SNOW_BALL_IMAGE, HEART_IMAGE;
     public static BufferedImage ITEM_SPRITESHEET;
 
     public Item(ItemType type, int x, int y) {
