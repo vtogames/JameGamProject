@@ -6,34 +6,58 @@ public class Tile {
     private int x, y;
     private final static int width = 16, height = 16;
     private TileType tileType;
-    private Image tileImage;
+    private Image[] tileImage;
+    public boolean onTop;
 
-    public static Image WALL_IMAGE, GROUND_IMAGE, LAVA_IMAGE, SUN_IMAGE1, SUN_IMAGE2, SUN_IMAGE3, FIRE_IMAGE1, FIRE_IMAGE2;
+    public int actImage, actC, recool = 40;
+
+    public static Image WALL_IMAGE, WALL_FREZED, GROUND_IMAGE, LAVA_IMAGE, SUN_IMAGE1, SUN_IMAGE2, SUN_IMAGE3, FIRE_IMAGE1, FIRE_IMAGE2, ICE_IMAGE, WATER_1, WATER_2, WATER_3, SANTAS_HOUSE, STOCK;
     public static BufferedImage TILE_SPRITESHEET;
 
-    public Tile(TileType tileType, int x, int y) {
+    public Tile(TileType tileType, int x, int y, boolean onTop) {
+        this.onTop = onTop;
         this.x = x * width;
         this.y = y * height;
         this.tileType = tileType;
+        tileImage = new Image[1];
         switch (tileType) {
             case WALL:
-                tileImage = WALL_IMAGE;
+                tileImage[0] = WALL_IMAGE;
+                break;
+            case WALL_FREZED:
+                tileImage[0] = WALL_FREZED;
                 break;
             case GROUND:
-                tileImage = GROUND_IMAGE;
+            case SHOW_HUD:
+                tileImage[0] = GROUND_IMAGE;
                 break;
             case SUN:
                 int r = SnowFilter.random.nextInt(3);
                 if(r == 0) {
-                    tileImage = SUN_IMAGE1;
+                    tileImage[0] = SUN_IMAGE1;
                 } else if(r == 1) {
-                    tileImage = SUN_IMAGE2;
+                    tileImage[0] = SUN_IMAGE2;
                 } else {
-                    tileImage = SUN_IMAGE3;
+                    tileImage[0] = SUN_IMAGE3;
                 }
                 break;
             case LAVA:
-                tileImage = LAVA_IMAGE;
+                tileImage[0] = LAVA_IMAGE;
+                break;
+            case ICE:
+                tileImage[0] = ICE_IMAGE;
+                break;
+            case WATER:
+                tileImage = new Image[3];
+                tileImage[0] = WATER_1;
+                tileImage[1] = WATER_2;
+                tileImage[2] = WATER_3;
+                break;
+            case SANTAS_HOUSE:
+                tileImage[0] = SANTAS_HOUSE;
+                break;
+            case STOCK:
+                tileImage[0] = STOCK;
                 break;
         }
     }
@@ -70,11 +94,11 @@ public class Tile {
         return height;
     }
 
-    public Image getTileImage() {
+    public Image[] getTileImage() {
         return tileImage;
     }
 
-    public void setTileImage(Image tileImage) {
+    public void setTileImage(Image[] tileImage) {
         this.tileImage = tileImage;
     }
 }

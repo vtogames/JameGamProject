@@ -8,6 +8,12 @@ import java.awt.event.KeyEvent;
 public class NPCController extends YldObject {
 
     @Override
+    public void create() {
+        super.create();
+        setLayer(29);
+    }
+
+    @Override
     public void update() {
         super.update();
         TileSystem.npcs.forEach(npc -> {
@@ -15,10 +21,14 @@ public class NPCController extends YldObject {
                     && PlayScene.player.getAxis().position.getY() > npc.y - 20 && PlayScene.player.getAxis().position.getY() < npc.y + 20 + PlayScene.player.getAxis().scale.getY()) {
 
                 try {
-                    if (YldInput.isKeyPressed(KeyEvent.VK_SPACE)) {
-                        if(PlayScene.dialogueBox.can)
-                        PlayScene.dialogueBox.show(new String[]{"1OI AMIGO", "2OLA, TUDO BEM?", }, npc.npcIdle[0].getScaledInstance(64, 64, Image.SCALE_FAST), npc.npcIdle[3].getScaledInstance(64, 64, Image.SCALE_FAST));
+                    if (npc.interactable) {
+                        if (YldInput.isKeyPressed(KeyEvent.VK_SPACE)) {
+                            if (PlayScene.dialogueBox.can)
+                                PlayScene.dialogueBox.show(npc.dialog, npc.dialogBoxImage, Player.dialogImage, npc.dialogName);
+                        }
+                        DialogueBox.canInteract = true;
                     }
+
                 } catch (Exception ignore) {
                 }
 
@@ -29,12 +39,12 @@ public class NPCController extends YldObject {
     @Override
     public void draw(Graphics g) {
         super.draw(g);
-        TileSystem.npcs.forEach(npc -> {
+        for (NPC npc : TileSystem.npcs) {
             boolean canRender = true;
 
-            if (npc.x < -Camera.x - Tile.getWidth())
+            if (npc.x < -Camera.x - Tile.getWidth() - npc.xOff)
                 canRender = false;
-            if (npc.y < -Camera.y - Tile.getHeight())
+            if (npc.y < -Camera.y - Tile.getHeight() - npc.yOff)
                 canRender = false;
             if (npc.x > -Camera.x + YldGame.getImage().getWidth())
                 canRender = false;
@@ -42,10 +52,19 @@ public class NPCController extends YldObject {
                 canRender = false;
 
             if (canRender) {
-                if (npc.y < PlayScene.player.getAxis().position.getY())
+                if (PlayScene.player.getAxis().position.getX() > npc.x - 20 && PlayScene.player.getAxis().position.getX() < npc.x + 20 + PlayScene.player.getAxis().scale.getX()
+                        && PlayScene.player.getAxis().position.getY() > npc.y - 20 && PlayScene.player.getAxis().position.getY() < npc.y + 20 + PlayScene.player.getAxis().scale.getY()) {
+
+                    if (npc.y + npc.yOff < PlayScene.player.getAxis().position.getY())
+                        setLayer(PlayScene.player.getLayer() - 1);
+                    else
+                        setLayer(PlayScene.player.getLayer() + 1);
+
+                }
+                if(PlayScene.player.ctgoC > 0 || Player.lifeColorC > 0 || Player.enterColorC > 0) {
                     setLayer(PlayScene.player.getLayer() - 1);
-                else
-                    setLayer(PlayScene.player.getLayer() + 1);
+                }
+
                 npc.actImageC++;
                 if (npc.actImageC >= NPC.imageCMax) {
                     npc.actImageC = 0;
@@ -57,7 +76,7 @@ public class NPCController extends YldObject {
                 g.drawImage(npc.npcIdle[npc.actImage], npc.x + TileDraw.cx, npc.y + TileDraw.cy, null);
             }
 
-        });
+        }
 
     }
 }
