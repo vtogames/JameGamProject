@@ -14,12 +14,15 @@ public class SnowFilter extends YldObject {
     @Override
     public void update() {
         super.update();
-        if (random.nextInt(5) == 0) {
-            SnowFlake snowFlake = new SnowFlake();
-            snowFlake.x = random.nextInt(YldGame.getImage().getWidth() + YldGame.getImage().getWidth() / 2) - YldGame.getImage().getWidth() / 2f;
-            snowFlake.speed = random.nextFloat() + 1f;
-            snowFlakes.add(snowFlake);
+        if (TileSystem.actLevel != "map3") {
+            if (random.nextInt(5) == 0) {
+                SnowFlake snowFlake = new SnowFlake();
+                snowFlake.x = random.nextInt(YldGame.getImage().getWidth() + YldGame.getImage().getWidth() / 2) - YldGame.getImage().getWidth() / 2f;
+                snowFlake.speed = random.nextFloat() + 1f;
+                snowFlakes.add(snowFlake);
+            }
         }
+
         snowFlakes.forEach(sf -> {
             if (!(sf instanceof SnowBall)) {
                 sf.x += 0.5 * sf.speed;
@@ -59,14 +62,24 @@ public class SnowFilter extends YldObject {
 
     @Override
     public void draw(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
         g.setColor(Color.white);
         setLayer(50);
         snowFlakes.forEach(sf -> {
             if (!(sf instanceof SnowBall)) {
-                g.fillRect((int) sf.x, (int) sf.y, 1, 1);
+                //g.fillRect((int) sf.x, (int) sf.y, 1, 1);
             }
 
         });
+        if (TileSystem.actLevel == "map3") {
+            g2.setColor(new Color(0, 0, 0, 100));
+            g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
+            String toysString = "TOYS REMAINING: " + Player.totalToys;
+            g.setColor(Color.white);
+            g.setFont(new Font("arial", 1, 10));
+            g.drawString(toysString, YldGame.getImage().getWidth() - g.getFontMetrics().stringWidth(toysString), g.getFont().getSize());
+        }
+        //g.drawImage(Item.GIFT_IMAGES[0], 0, 0, null);
     }
 
 }

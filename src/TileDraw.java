@@ -45,7 +45,7 @@ public class TileDraw extends YldComponent implements YldGraphical {
         cx = (int) Camera.x;
         cy = (int) Camera.y;
         if (TileSystem.tiles != null) {
-            g.setColor(Color.white);
+            g.setColor(Color.black);
             g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
             for (Tile tile : TileSystem.tiles) {
 
@@ -106,6 +106,7 @@ public class TileDraw extends YldComponent implements YldGraphical {
 
         }
         Item.items.forEach(item -> {
+
             boolean canRender = true;
 
             if (item.getX() < -Camera.x - Tile.getWidth())
@@ -116,7 +117,7 @@ public class TileDraw extends YldComponent implements YldGraphical {
                 canRender = false;
             if (item.getY() > -Camera.y + YldGame.getImage().getHeight())
                 canRender = false;
-
+            //System.out.println(item.type + ", " + canRender + ", " + item.getX() + ", " + item.getY());
             item.canRender = canRender;
 
             if (item.canRender) {

@@ -3,12 +3,15 @@ import yield.objects.YldScene;
 import yield.util.YldAudio;
 import yield.util.YldInput;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 
 public class GameOverScene extends YldScene {
 
     private YldAudio gameOverAudio = new YldAudio("/gameover.wav");
+    public static Image gameOverImage;
 
     @Override
     public void enter() {
@@ -22,6 +25,7 @@ public class GameOverScene extends YldScene {
     public void update() {
         super.update();
         if(YldInput.isKeyPressed(KeyEvent.VK_ENTER) && getFrames() > 60) {
+            gameOverAudio.stop();
             Player.lifes = 3;
             Player.items.clear();
             TileSystem.actLevel = null;
@@ -39,6 +43,7 @@ public class GameOverScene extends YldScene {
         if(a < 0) a = 0;
         if(a2 < 0) a2 = 0;
         if(a2 > 255) a2 = 255;
+
         String gameOver = "Game Over";
         String enter = "press enter";
         g.setColor(Color.white);
@@ -53,6 +58,10 @@ public class GameOverScene extends YldScene {
 
 
 
+
+        if(gameOverImage != null) {
+            g.drawImage(gameOverImage, 0, 0, null);
+        }
         g2.setColor(new Color(0, 0, 0, a));
         g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
     }

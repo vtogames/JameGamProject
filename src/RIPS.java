@@ -104,7 +104,9 @@ public class RIPS extends YldObject {
                 getHeight());
         if (Player.enterColorC < 0) Player.enterColorC = 0;
         if (Player.enterColorC > 255) Player.enterColorC = 255;
-        g2.setColor(new Color(255, 255, 255, Player.enterColorC));
+        if (!PlayScene.switchBlack)
+            g2.setColor(new Color(255, 255, 255, Player.enterColorC));
+        else g2.setColor(new Color(0, 0, 0, Player.enterColorC));
         g.fillRect(0, 0, YldGame.getImage().getWidth(), YldGame.getImage().getHeight());
     }
 }

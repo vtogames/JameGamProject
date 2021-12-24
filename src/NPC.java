@@ -1,4 +1,6 @@
+import yield.YldGame;
 import yield.objects.YldObject;
+import yield.util.YldAudio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -82,7 +84,7 @@ public class NPC {
                             "2What do you mean by: 'has already been'?",
                             "1You're going to find out in a little while."
                     };
-                } else if(TileSystem.actLevel == "map2") {
+                } else if (TileSystem.actLevel == "map2") {
                     npcIdle = new Image[12];
                     npcIdle[0] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
                     npcIdle[1] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
@@ -110,6 +112,54 @@ public class NPC {
                             "2Yea, but...",
                             "1Shut!"
                     };
+                } else if (TileSystem.actLevel == "map4") {
+                    npcIdle = new Image[12];
+                    npcIdle[0] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[1] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[2] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[3] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[4] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[5] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[6] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[7] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[8] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[9] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[10] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[11] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    dialogBoxImage = NPC.NPC_SPRITESHEET.getSubimage(144, 0, 16, 16).getScaledInstance(64, 64, Image.SCALE_FAST);
+                    disapear = true;
+                    dialogName = "TOGLIN, THE GOBLIN";
+
+                    dialog = new String[]{"1Okay! Now just deliver the gifts to the houses in this neighborhood!",
+                            "2And how is the rest of the world that is also without Christmas?",
+                            "1They have money",
+                            "1They can buy presents themselves.",
+                            "1But now...",
+                            "1Press ENTER to deliver gifts!"
+                    };
+                } else if (TileSystem.actLevel == "map5") {
+                    npcIdle = new Image[12];
+                    npcIdle[0] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[1] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[2] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[3] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[4] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[5] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
+                    npcIdle[6] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[7] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[8] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[9] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[10] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    npcIdle[11] = NPC.NPC_SPRITESHEET.getSubimage(16, 0, 16, 16);
+                    dialogBoxImage = NPC.NPC_SPRITESHEET.getSubimage(144, 0, 16, 16).getScaledInstance(64, 64, Image.SCALE_FAST);
+                    disapear = true;
+                    dialogName = "TOGLIN, THE GOBLIN";
+
+                    dialog = new String[]{"1But now we need to save Santa!",
+                            "1Otherwise he will never get rid of eCola!",
+                            "2But how are we going to do this?",
+                            "1Come and I'll show you."
+                    };
                 }
                 break;
             case GOBLIN_2:
@@ -132,7 +182,7 @@ public class NPC {
                     dialogName = "TOGLIN, THE GOBLIN";
                     dialog = new String[]{"1This is Santa's house.", "1He hasn't been out of there in four months.",
                             "2gosh"};
-                } else if(TileSystem.actLevel == "map2") {
+                } else if (TileSystem.actLevel == "map2") {
                     npcIdle = new Image[12];
                     npcIdle[0] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
                     npcIdle[1] = NPC.NPC_SPRITESHEET.getSubimage(0, 0, 16, 16);
@@ -320,6 +370,27 @@ public class NPC {
                     };
                 }
                 break;
+            case BIG_HOUSE_DOOR:
+                npcIdle = new Image[1];
+                disapear = true;
+                dialogName = "";
+                dialog = new String[]{"1Opening the door..."
+                };
+                break;
+            case GIFT:
+                System.out.println("gift");
+                int n2 = SnowFilter.random.nextInt(Item.GIFT_IMAGES.length - 1);
+                npcIdle = new Image[1];
+                npcIdle[0] = Item.GIFT_IMAGES[n2];
+                interactable = false;
+                break;
         }
     }
+
+    public void onDesapear() {
+        if (type == NPCType.BIG_HOUSE_DOOR) {
+            YldGame.switchScene("DoorScene");
+        }
+    }
+
 }

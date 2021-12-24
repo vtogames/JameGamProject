@@ -26,8 +26,8 @@ public class EnemyController extends YldObject {
 
             e.canRender = canRender;
             if (e.bouncer) {
-                if(PlayScene.player.getAxis().position.getX() > e.x - YldGame.getImage().getWidth() * 2 && PlayScene.player.getAxis().position.getX() < e.x + YldGame.getImage().getWidth() * 2
-                && PlayScene.player.getAxis().position.getY() > e.y - YldGame.getImage().getHeight() * 2 && PlayScene.player.getAxis().position.getY() < e.y + YldGame.getImage().getHeight() * 2) {
+                if(PlayScene.player.getAxis().position.getX() > e.x - e.vision * Tile.getWidth() && PlayScene.player.getAxis().position.getX() < e.x + e.vision * Tile.getWidth()
+                && PlayScene.player.getAxis().position.getY() > e.y - e.vision * Tile.getHeight() * 2 && PlayScene.player.getAxis().position.getY() < e.y + e.vision * Tile.getHeight()) {
                     e.walking = true;
                     if (e.actDir == 'r') {
                         e.x += e.speed;
@@ -84,13 +84,13 @@ public class EnemyController extends YldObject {
                 }
             }
 
-            if (TileSystem.tiles != null)
-                for (Tile tile : TileSystem.tiles) {
-                    if (tile != null) {
-                        if (tile.getTileType() == TileType.WALL || tile.getTileType() == TileType.WALL_FREZED) {
+            if (e.bouncer) {
+                if(e.walking) {
+                    if(TileSystem.tiles != null) {
+                        for (Tile tile : TileSystem.tiles) {
+                            if (tile != null) {
+                                if (tile.getTileType() == TileType.WALL || tile.getTileType() == TileType.WALL_FREZED || tile.getTileType() == TileType.BOUNCE_GROUND) {
 
-                            if (e.bouncer) {
-                                if(e.walking) {
                                     if (e.x - 1 >= tile.getX() && e.x - 1 <= tile.getX() + Tile.getWidth() && e.y >= tile.getY() && e.y <= tile.getY() + Tile.getHeight()
                                             || e.x - 1 + e.enemyIdle[0].getWidth(null) >= tile.getX() && e.x - 1 + e.enemyIdle[0].getWidth(null) <= tile.getX() + Tile.getWidth() && e.y >= tile.getY() && e.y <= tile.getY() + Tile.getHeight()
                                             || e.x - 1 >= tile.getX() && e.x - 1 <= tile.getX() + Tile.getWidth() && e.y + e.enemyIdle[0].getHeight(null) >= tile.getY() && e.y + e.enemyIdle[0].getHeight(null) <= tile.getY() + Tile.getHeight()
@@ -110,8 +110,24 @@ public class EnemyController extends YldObject {
                                         }
                                     }
                                 }
+                            }
+                        }
 
-                            } else if (e.canRender) {
+
+                    }
+                }
+
+            }
+
+
+
+
+            if (canRender) {
+                if (TileSystem.tiles != null && !e.bouncer)
+                    for (Tile tile : TileSystem.tiles) {
+                        if (tile != null) {
+                            if (tile.getTileType() == TileType.WALL || tile.getTileType() == TileType.WALL_FREZED) {
+
                                 //up left
                                 if (e.x - 1 >= tile.getX() && e.x - 1 <= tile.getX() + Tile.getWidth() && e.y >= tile.getY() && e.y <= tile.getY() + Tile.getHeight()) {
                                     e.x += e.speed;
@@ -135,17 +151,13 @@ public class EnemyController extends YldObject {
                                     e.x -= e.speed;
                                     e.y -= e.speed;
                                 }
+
+
+
                             }
-
-
                         }
+
                     }
-
-                }
-
-
-            if (canRender) {
-
                 if (!e.bouncer) {
                     if (PlayScene.player.getAxis().position.getX() > e.x - Tile.getWidth() * e.vision && PlayScene.player.getAxis().position.getX() < e.x + Tile.getWidth() * e.vision + PlayScene.player.getAxis().scale.getX()
                             && PlayScene.player.getAxis().position.getY() > e.y - Tile.getHeight() * e.vision && PlayScene.player.getAxis().position.getY() < e.y + Tile.getHeight() * e.vision + PlayScene.player.getAxis().scale.getY()) {

@@ -11,7 +11,7 @@ public class Tile {
 
     public int actImage, actC, recool = 40;
 
-    public static Image WALL_IMAGE, WALL_FREZED, GROUND_IMAGE, LAVA_IMAGE, SUN_IMAGE1, SUN_IMAGE2, SUN_IMAGE3, FIRE_IMAGE1, FIRE_IMAGE2, ICE_IMAGE, WATER_1, WATER_2, WATER_3, SANTAS_HOUSE, STOCK, BIG_HOUSE;
+    public static Image WALL_IMAGE, WALL_FREZED, GROUND_IMAGE, WOOD_IMAGE, FLOOR_IMAGE, CARPET_IMAGE, LAVA_IMAGE, SUN_IMAGE1, SUN_IMAGE2, SUN_IMAGE3, FIRE_IMAGE1, FIRE_IMAGE2, ICE_IMAGE, WATER_1, WATER_2, WATER_3, SANTAS_HOUSE, STOCK, BIG_HOUSE;
     public static BufferedImage TILE_SPRITESHEET;
 
     public Tile(TileType tileType, int x, int y, boolean onTop) {
@@ -22,7 +22,10 @@ public class Tile {
         tileImage = new Image[1];
         switch (tileType) {
             case WALL:
-                tileImage[0] = WALL_IMAGE;
+                if (TileSystem.actLevel == "map3")
+                    tileImage[0] = WOOD_IMAGE;
+                else
+                    tileImage[0] = WALL_IMAGE;
                 if (onTop) {
                     this.onTop = false;
                     tileImage[0] = GROUND_IMAGE;
@@ -30,11 +33,22 @@ public class Tile {
                 break;
             case WALL_FREZED:
                 tileImage[0] = WALL_FREZED;
+                if (onTop) {
+                    this.onTop = false;
+                    tileImage = new Image[3];
+                    tileImage[0] = WATER_1;
+                    tileImage[1] = WATER_2;
+                    tileImage[2] = WATER_3;
+                }
                 break;
             case GROUND:
             case SHOW_HUD:
             case NEXT_LEVEL:
-                tileImage[0] = GROUND_IMAGE;
+            case BOUNCE_GROUND:
+                if (TileSystem.actLevel == "map3")
+                    tileImage[0] = FLOOR_IMAGE;
+                else
+                    tileImage[0] = GROUND_IMAGE;
                 break;
             case SUN:
                 int r = SnowFilter.random.nextInt(3);
@@ -50,7 +64,10 @@ public class Tile {
                 tileImage[0] = LAVA_IMAGE;
                 break;
             case ICE:
-                tileImage[0] = ICE_IMAGE;
+                if (TileSystem.actLevel == "map3")
+                    tileImage[0] = CARPET_IMAGE;
+                else
+                    tileImage[0] = ICE_IMAGE;
                 break;
             case WATER:
                 tileImage = new Image[3];

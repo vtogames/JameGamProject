@@ -21,13 +21,31 @@ public class NPCController extends YldObject {
                     && PlayScene.player.getAxis().position.getY() > npc.y - 20 && PlayScene.player.getAxis().position.getY() < npc.y + 20 + PlayScene.player.getAxis().scale.getY()) {
 
                 try {
+                    if (TileSystem.actLevel == "map2") {
+                        if (npc.type == NPCType.BIG_HOUSE_DOOR) {
+                            if (Player.key) {
+                                npc.interactable = true;
+                            } else {
+                                npc.interactable = false;
+                            }
+                        }
+                        if (npc.type == NPCType.DOOR_LOCKED) {
+                            if (!Player.key) {
+                                npc.interactable = true;
+                            } else {
+                                npc.interactable = false;
+                            }
+                        }
+                    }
                     if (npc.interactable) {
                         if (YldInput.isKeyPressed(KeyEvent.VK_SPACE)) {
+
                             if (PlayScene.dialogueBox.can) {
                                 PlayScene.dialogueBox.show(npc.dialog, npc.dialogBoxImage, Player.dialogImage, npc.dialogName);
-                                if(npc.disapear)
-                                PlayScene.dialogueBox.toDesapear = npc;
+                                if (npc.disapear)
+                                    PlayScene.dialogueBox.toDesapear = npc;
                             }
+
 
                         }
                         DialogueBox.canInteract = true;
@@ -64,9 +82,6 @@ public class NPCController extends YldObject {
                     else
                         setLayer(PlayScene.player.getLayer() + 1);
 
-                }
-                if(PlayScene.player.ctgoC > 0 || Player.lifeColorC > 0 || Player.enterColorC > 0) {
-                    setLayer(PlayScene.player.getLayer() - 1);
                 }
 
                 npc.actImageC++;

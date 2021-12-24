@@ -98,8 +98,10 @@ public class DialogueBox extends YldObject {
 
             }
             if (end) {
-                if(toDesapear != null && !force)
+                if(toDesapear != null && !force) {
+                    toDesapear.onDesapear();
                     TileSystem.npcs.remove(toDesapear);
+                }
                 toDesapear = null;
                 xs = 0;
                 xs2 = 0;
