@@ -31,7 +31,6 @@ public class Main extends YldFrame {
             Tile.SANTAS_HOUSE = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/House.png")));
             Tile.BIG_HOUSE = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/bighouse.png")));
             GameOverScene.gameOverImage = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/gameover.png")));
-            BombScene.banker = ImageIO.read(Objects.requireNonNull(Main.class.getResource("/banker.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
